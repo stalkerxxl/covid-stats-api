@@ -16,7 +16,7 @@
 * code
 * _timestampable_
 
-### Case
+### Covid
 * id
 * сonfirmed: int
 * deaths: int
