@@ -2,23 +2,22 @@
 
 namespace App\Controller;
 
-use App\Exception\ApiException;
-use App\Service\ApiClient;
+use App\Message\UpdateCountriesList;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class TestController extends AbstractController
 {
     /**
      */
     #[Route('/test', name: 'app_test')]
-    public function index(ApiClient $apiClient, ValidatorInterface $validator): Response
+    public function index(MessageBusInterface $messageBus): Response
     {
         try {
-            $a = $apiClient->getCountriesList();
-        } catch (ApiException $e) {
+            $messageBus->dispatch(new UpdateCountriesList());
+        } catch (\Exception $e) {
             dump($e);
         }
 

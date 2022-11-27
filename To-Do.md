@@ -39,4 +39,7 @@ ManyToOne: Country
 * _timestampable_
 * OneToOne: Country
 
+### TASK's (планировщик)
+updateCountryList: 1 day
+
 
