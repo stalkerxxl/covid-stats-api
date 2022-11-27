@@ -9,6 +9,8 @@ use App\Message\UpdateStat;
 use App\Repository\CountryRepository;
 use App\Repository\StatRepository;
 use App\Service\ApiClient;
+use DateTimeImmutable;
+use DateTimeZone;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityNotFoundException;
 use Exception;
@@ -43,6 +45,7 @@ final class UpdateStatHandler implements MessageHandlerInterface
      */
     public function __invoke(UpdateStat $message)
     {
+        //FIXME сделать DTO
         $this->response = $this->apiClient->getSummaryStat();
         if ($this->response['Message'] != '') {
             throw new \Exception($this->response['Message']);
@@ -66,25 +69,7 @@ final class UpdateStatHandler implements MessageHandlerInterface
         if (null == $country) {
             throw new EntityNotFoundException();
         }
-        $stat = $country->getStat();
-        if (null == $stat) {
-            $stat = new Stat();
-            $stat->setCountry($country);
-            $this->entityManager->persist($stat);
-        }
-        $stat->setNewConfirmed($item['NewConfirmed'])
-            ->setTotalConfirmed($item['TotalConfirmed'])
-            ->setNewDeaths($item['NewDeaths'])
-            ->setTotalDeaths($item['TotalDeaths'])
-            ->setNewRecovered($item['NewRecovered'])
-            ->setTotalRecovered($item['TotalRecovered'])
-            ->setApiTimestamp(new \DateTimeImmutable($item['Date']));
-
-        $errors = $this->validator->validate($stat);
-        if ($errors->count() > 0) {
-            $this->entityManager->detach($stat);
-            //FIXME писать в лог
-        }
+        $this->makeStatEntity($country, $item);
     }
 
     /**
@@ -103,26 +88,44 @@ final class UpdateStatHandler implements MessageHandlerInterface
         }
 
         $worldData = $this->response['Global'];
+        $worldData['ID']= $this->response['ID'];
 
-        $stat = $world->getStat();
+        $this->makeStatEntity($world, $worldData);
+
+    }
+
+    /**
+     * @param Country $country
+     * @param array $item
+     * @return void
+     * @throws Exception
+     */
+    private function makeStatEntity(Country $country, array $item): void
+    {
+        $stat = $country->getStat();
+
         if (null == $stat) {
             $stat = new Stat();
-            $stat->setCountry($world);
+            $stat->setCountry($country);
             $this->entityManager->persist($stat);
+        } elseif ($stat->getApiUuid() == $item['ID']) {
+            $this->entityManager->detach($stat);
+            $this->entityManager->detach($country);
+            return;
         }
-        $stat->setNewConfirmed($worldData['NewConfirmed'])
-            ->setTotalConfirmed($worldData['TotalConfirmed'])
-            ->setNewDeaths($worldData['NewDeaths'])
-            ->setTotalDeaths($worldData['TotalDeaths'])
-            ->setNewRecovered($worldData['NewRecovered'])
-            ->setTotalRecovered($worldData['TotalRecovered'])
-            ->setApiTimestamp(new \DateTimeImmutable($worldData['Date']));
+        $stat->setApiUuid($item['ID'])
+            ->setNewConfirmed($item['NewConfirmed'])
+            ->setTotalConfirmed($item['TotalConfirmed'])
+            ->setNewDeaths($item['NewDeaths'])
+            ->setTotalDeaths($item['TotalDeaths'])
+            ->setNewRecovered($item['NewRecovered'])
+            ->setTotalRecovered($item['TotalRecovered'])
+            ->setApiTimestamp(new \DateTimeImmutable($item['Date']));
 
         $errors = $this->validator->validate($stat);
         if ($errors->count() > 0) {
             $this->entityManager->detach($stat);
             //FIXME писать в лог
         }
-
     }
 }

@@ -9,13 +9,16 @@ use Gedmo\Mapping\Annotation\Timestampable;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: StatRepository::class)]
-#[UniqueEntity(['apiTimestamp'])]
+#[UniqueEntity(['country'])]
 class Stat
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
+
+    #[ORM\Column(type: Types::STRING)]
+    private ?string $apiUuid = null;
 
     #[ORM\Column(type: Types::INTEGER)]
     private ?int $newConfirmed = null;
@@ -53,6 +56,18 @@ class Stat
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getApiUuid(): ?string
+    {
+        return $this->apiUuid;
+    }
+
+    public function setApiUuid(?string $apiUuid): self
+    {
+        $this->apiUuid = $apiUuid;
+
+        return $this;
     }
 
     public function getNewConfirmed(): ?int

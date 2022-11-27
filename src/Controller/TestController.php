@@ -20,11 +20,16 @@ use Symfony\Component\Routing\Annotation\Route;
 class TestController extends AbstractController
 {
     /**
+     * @throws \Exception
      */
     #[Route('/test', name: 'app_test')]
     public function index(UpdateStatHandler $handler): Response
     {
        call_user_func($handler, new UpdateStat());
+       /* $apiTime = '2022-11-27T12:29:36.105Z';
+        $convertTime = new \DateTimeImmutable($apiTime);
+        dump((bool) $apiTime=$convertTime, $convertTime);*/
+
 
 
         return $this->render('test/index.html.twig', [
