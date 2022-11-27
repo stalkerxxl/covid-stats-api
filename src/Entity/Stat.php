@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\StatRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation\Timestampable;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: StatRepository::class)]
@@ -38,9 +39,11 @@ class Stat
     private ?\DateTimeImmutable $apiTimestamp = null;
 
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
+    #[Timestampable(on: 'create')]
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
+    #[Timestampable(on: 'update')]
     private ?\DateTimeImmutable $updatedAt = null;
 
     #[ORM\OneToOne(inversedBy: 'stat', cascade: ['persist', 'remove'])]

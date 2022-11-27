@@ -41,6 +41,7 @@ final class UpdateCountriesListHandler implements MessageHandlerInterface
             $errors = $this->validator->validate($country);
             if ($errors->count() > 0) {
                 continue;
+                //FIXME писать в лог
             }
 
             $this->entityManager->persist($country);
