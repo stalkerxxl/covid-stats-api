@@ -31,7 +31,7 @@ final class UpdateCountriesListHandler implements MessageHandlerInterface
     {
 
         $countriesList = $this->getCountriesListFromApi();//FIXME сделать DTO + валидацию
-        $repo = $this->entityManager->getRepository(Country::class);
+        //$repo = $this->entityManager->getRepository(Country::class);
         foreach ($countriesList as $item) {
             $country = (new Country())
                 ->setName($item['Country'])
