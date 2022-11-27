@@ -3,7 +3,9 @@
 namespace App\Controller;
 
 use App\Message\UpdateCountriesList;
+use App\Message\UpdateStat;
 use App\MessageHandler\UpdateCountriesListHandler;
+use App\MessageHandler\UpdateStatHandler;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\MessageBusInterface;
@@ -20,9 +22,9 @@ class TestController extends AbstractController
     /**
      */
     #[Route('/test', name: 'app_test')]
-    public function index( UpdateCountriesListHandler $handler): Response
+    public function index(UpdateStatHandler $handler): Response
     {
-        call_user_func($handler, new UpdateCountriesList());
+       call_user_func($handler, new UpdateStat());
 
 
         return $this->render('test/index.html.twig', [

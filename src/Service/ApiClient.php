@@ -45,6 +45,15 @@ class ApiClient
         $this->endpoint = '/countries';
 
         return $this->_send();
+    }
 
+    /**
+     * @throws ApiException
+     */
+    public function getSummaryStat(): array
+    {
+        $this->endpoint = '/summary';
+
+        return $this->_send();
     }
 }

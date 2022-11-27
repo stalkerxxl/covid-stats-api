@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Country;
 use App\Exception\ApiException;
 use App\Message\UpdateCountriesList;
 use App\MessageHandler\UpdateCountriesListHandler;
@@ -22,11 +23,24 @@ class AppFixtures extends Fixture
      */
     public function load(ObjectManager $manager): void
     {
+        $world = (new Country())
+            ->setName('WORLD')
+            ->setCode('world')
+            ->setSlug('world')
+            ->setCreatedAt(new \DateTimeImmutable());
+        $manager->persist($world);
+        $manager->flush();
+
         $this->makeCountries();
     }
 
     private function makeCountries()
     {
         call_user_func($this->countryHandler, new UpdateCountriesList());
+    }
+
+    private function makeStats()
+    {
+
     }
 }

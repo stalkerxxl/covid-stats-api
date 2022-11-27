@@ -3,9 +3,12 @@
 namespace App\Entity;
 
 use App\Repository\StatRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: StatRepository::class)]
+#[UniqueEntity(['apiTimestamp'])]
 class Stat
 {
     #[ORM\Id]
@@ -13,31 +16,31 @@ class Stat
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column]
+    #[ORM\Column(type: Types::INTEGER)]
     private ?int $newConfirmed = null;
 
-    #[ORM\Column]
+    #[ORM\Column(type: Types::INTEGER)]
     private ?int $totalConfirmed = null;
 
-    #[ORM\Column]
+    #[ORM\Column(type: Types::INTEGER)]
     private ?int $newDeaths = null;
 
-    #[ORM\Column]
+    #[ORM\Column(type: Types::INTEGER)]
     private ?int $totalDeaths = null;
 
-    #[ORM\Column]
+    #[ORM\Column(type: Types::INTEGER)]
     private ?int $newRecovered = null;
 
-    #[ORM\Column]
+    #[ORM\Column(type: Types::INTEGER)]
     private ?int $totalRecovered = null;
 
-    #[ORM\Column]
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
     private ?\DateTimeImmutable $apiTimestamp = null;
 
-    #[ORM\Column]
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
     private ?\DateTimeImmutable $createdAt = null;
 
-    #[ORM\Column(nullable: true)]
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
     private ?\DateTimeImmutable $updatedAt = null;
 
     #[ORM\OneToOne(inversedBy: 'stat', cascade: ['persist', 'remove'])]
