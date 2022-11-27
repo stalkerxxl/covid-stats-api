@@ -2,11 +2,9 @@
 
 namespace App\Service;
 
-use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
-use Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface;
-use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
-use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
-use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
+use App\Exception\ApiException;
+use Exception;
+use Symfony\Contracts\HttpClient\Exception\ExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class ApiClient
@@ -23,26 +21,24 @@ class ApiClient
     }
 
     /**
-     * @throws TransportExceptionInterface
-     * @throws ServerExceptionInterface
-     * @throws RedirectionExceptionInterface
-     * @throws DecodingExceptionInterface
-     * @throws ClientExceptionInterface
+     * @return array
+     * @throws ApiException
      */
     private function _send(): array
     {
-        $response = $this->client->request($this->method, $this->endpoint, [
-            'query' => $this->params
-        ]);
-        return $response->toArray();
+        try {
+            $response = $this->client->request($this->method, $this->endpoint,
+                ['query' => $this->params]);
+
+            return $response->toArray();
+
+        } catch (ExceptionInterface $e) {
+            throw new ApiException($e->getMessage(), $e->getCode(), $e);
+        }
     }
 
     /**
-     * @throws TransportExceptionInterface
-     * @throws ServerExceptionInterface
-     * @throws RedirectionExceptionInterface
-     * @throws DecodingExceptionInterface
-     * @throws ClientExceptionInterface
+     * @throws ApiException
      */
     public function getCountriesList(): array
     {
