@@ -4,6 +4,7 @@ namespace App\Service;
 
 use App\Exception\ApiException;
 use Exception;
+use Psr\Log\LoggerInterface;
 use Symfony\Contracts\HttpClient\Exception\ExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
@@ -13,11 +14,13 @@ class ApiClient
     private string $method = 'GET';
     private string $endpoint;
     private array $params = [];
+    private LoggerInterface $logger;
 
 
-    public function __construct(HttpClientInterface $covid19apiClient)
+    public function __construct(HttpClientInterface $covid19apiClient, LoggerInterface $httpClientLogger)
     {
         $this->client = $covid19apiClient;
+        $this->logger = $httpClientLogger;
     }
 
     /**

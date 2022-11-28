@@ -10,6 +10,18 @@ when@dev:
                 path: "%kernel.logs_dir%/%kernel.environment%.log"
                 level: debug
                 channels: ["!event"]
+            messenger:
+                type: rotating_file
+                path: "%kernel.logs_dir%/messenger.log"
+                level: debug
+                channels: [ "messenger" ]
+                max_files: 10
+            http_client:
+                type: rotating_file
+                path: "%kernel.logs_dir%/http_client.log"
+                level: debug
+                channels: [ "http_client" ]
+                max_files: 10
             # uncomment to get logging in your browser
             # you may have to allow bigger header sizes in your Web server configuration
             #firephp:
