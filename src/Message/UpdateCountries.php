@@ -11,7 +11,7 @@ final class UpdateCountries
         $this->offlineData = $offlineData;
     }
 
-    public function getOfflineData(): array
+    public function getOfflineData(): ?array
     {
         return $this->offlineData;
     }

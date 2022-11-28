@@ -3,10 +3,12 @@
 namespace App\MessageHandler;
 
 use App\Entity\Country;
+use App\Event\CountriesUpdatedEvent;
 use App\Message\UpdateCountries;
 use App\Service\ApiClient;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
@@ -15,14 +17,17 @@ final class UpdateCountriesHandler implements MessageHandlerInterface
     private ApiClient $apiClient;
     private EntityManagerInterface $entityManager;
     private ValidatorInterface $validator;
+    private EventDispatcherInterface $eventDispatcher;
 
-    public function __construct(ApiClient              $apiClient,
-                                EntityManagerInterface $entityManager,
-                                ValidatorInterface     $validator)
+    public function __construct(ApiClient                $apiClient,
+                                EntityManagerInterface   $entityManager,
+                                ValidatorInterface       $validator,
+                                EventDispatcherInterface $eventDispatcher)
     {
         $this->apiClient = $apiClient;
         $this->entityManager = $entityManager;
         $this->validator = $validator;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
@@ -43,21 +48,29 @@ final class UpdateCountriesHandler implements MessageHandlerInterface
             $this->makeWorldStat();
 
             foreach ($data['Countries'] as $item) {
+                if ($item['Country'] == 'Antarctica')
+                    continue;
 
                 $country = $this->updateCountryData($item);
                 $errors = $this->validator->validate($country);
                 if ($errors->count() > 0)
-                    //FIXME писать в лог
                     $this->entityManager->detach($country);
-
-
+                //FIXME писать в лог
             }
             $this->entityManager->flush();
+
+            $event = new CountriesUpdatedEvent();
+            $this->eventDispatcher->dispatch($event);
 
         } catch (Exception $e) {
             //FIXME писать в лог
             throw new Exception($e->getMessage());
         }
+    }
+
+    private function deleteAntarctica()
+    {
+//TODO
     }
 
     private function makeWorldStat()

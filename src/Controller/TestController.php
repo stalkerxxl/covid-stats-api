@@ -2,18 +2,13 @@
 
 namespace App\Controller;
 
+use App\Message\UpdateCountries;
 use App\Message\UpdateStatsByCountry;
+use App\MessageHandler\UpdateCountriesHandler;
 use App\MessageHandler\UpdateStatsByCountryHandler;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Messenger\MessageBusInterface;
-use Symfony\Component\Messenger\Stamp\BusNameStamp;
-use Symfony\Component\Messenger\Stamp\ConsumedByWorkerStamp;
-use Symfony\Component\Messenger\Stamp\DelayStamp;
-use Symfony\Component\Messenger\Stamp\RouterContextStamp;
-use Symfony\Component\Messenger\Stamp\SentStamp;
-use Symfony\Component\Messenger\Transport\Sender\SendersLocator;
 use Symfony\Component\Routing\Annotation\Route;
 
 class TestController extends AbstractController
@@ -22,9 +17,10 @@ class TestController extends AbstractController
      * @throws Exception
      */
     #[Route('/test', name: 'app_test')]
-    public function index(UpdateStatsByCountryHandler $handler): Response
+    public function index(UpdateCountriesHandler $handler): Response
     {
-      call_user_func($handler, new UpdateStatsByCountry('denmark'));
+      //call_user_func($handler, new UpdateStatsByCountry('denmark'));
+      call_user_func($handler, new UpdateCountries());
        $fromApi = '2022-11-26T00:00:00Z';
        $fromApiconvert = new \DateTimeImmutable($fromApi, new \DateTimeZone('UTC'));
         $time2db = new \DateTimeImmutable($fromApi, new \DateTimeZone('UTC'));
