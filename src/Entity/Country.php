@@ -11,7 +11,8 @@ use Gedmo\Mapping\Annotation\Timestampable;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: CountryRepository::class)]
-#[UniqueEntity(fields: ['name', 'slug', 'code'])]
+#[UniqueEntity(fields: ['name'])]
+#[UniqueEntity(fields: ['code'])]
 class Country
 {
     #[ORM\Id]
@@ -36,16 +37,59 @@ class Country
     #[Timestampable(on: 'update')]
     private ?\DateTimeImmutable $updatedAt = null;
 
-    #[ORM\OneToMany(mappedBy: 'country', targetEntity: Covid::class, orphanRemoval: true)]
-    private Collection $covids;
+    #[ORM\Column(length: 255)]
+    private ?string $continent = null;
 
-    #[ORM\OneToOne(mappedBy: 'country', cascade: ['persist', 'remove'], fetch: 'EAGER')]
-    private ?Stat $stat = null;
+    #[ORM\Column]
+    private ?int $population = null;
 
-    public function __construct()
-    {
-        $this->covids = new ArrayCollection();
-    }
+    #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 3)]
+    private ?string $populationDensity = null;
+
+    #[ORM\Column(type: Types::DECIMAL, precision: 5, scale: 2)]
+    private ?string $medianAge = null;
+
+    #[ORM\Column(type: Types::DECIMAL, precision: 5, scale: 3)]
+    private ?string $aged65Older = null;
+
+    #[ORM\Column(type: Types::DECIMAL, precision: 5, scale: 3)]
+    private ?string $aged70Older = null;
+
+    #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 3)]
+    private ?string $gdpPerCapita = null;
+
+    #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
+    private ?string $diabetesPrevalence = null;
+
+    #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 3)]
+    private ?string $handwashingFacilities = null;
+
+    #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
+    private ?string $hospitalBedsPerThousand = null;
+
+    #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
+    private ?string $lifeExpectancy = null;
+
+    #[ORM\Column]
+    private ?int $newConfirmed = null;
+
+    #[ORM\Column]
+    private ?int $totalConfirmed = null;
+
+    #[ORM\Column]
+    private ?int $newDeaths = null;
+
+    #[ORM\Column]
+    private ?int $totalDeaths = null;
+
+    #[ORM\Column]
+    private ?int $newRecovered = null;
+
+    #[ORM\Column]
+    private ?int $totalRecovered = null;
+
+    #[ORM\Column]
+    private ?\DateTimeImmutable $apiTimestamp = null;
 
     public function getId(): ?int
     {
@@ -142,19 +186,218 @@ class Country
         return $this;
     }
 
-    public function getStat(): ?Stat
+    public function getContinent(): ?string
     {
-        return $this->stat;
+        return $this->continent;
     }
 
-    public function setStat(Stat $stat): self
+    public function setContinent(string $continent): self
     {
-        // set the owning side of the relation if necessary
-        if ($stat->getCountry() !== $this) {
-            $stat->setCountry($this);
-        }
+        $this->continent = $continent;
 
-        $this->stat = $stat;
+        return $this;
+    }
+
+    public function getPopulation(): ?int
+    {
+        return $this->population;
+    }
+
+    public function setPopulation(int $population): self
+    {
+        $this->population = $population;
+
+        return $this;
+    }
+
+    public function getPopulationDensity(): ?string
+    {
+        return $this->populationDensity;
+    }
+
+    public function setPopulationDensity(string $populationDensity): self
+    {
+        $this->populationDensity = $populationDensity;
+
+        return $this;
+    }
+
+    public function getMedianAge(): ?string
+    {
+        return $this->medianAge;
+    }
+
+    public function setMedianAge(string $medianAge): self
+    {
+        $this->medianAge = $medianAge;
+
+        return $this;
+    }
+
+    public function getAged65Older(): ?string
+    {
+        return $this->aged65Older;
+    }
+
+    public function setAged65Older(string $aged65Older): self
+    {
+        $this->aged65Older = $aged65Older;
+
+        return $this;
+    }
+
+    public function getAged70Older(): ?string
+    {
+        return $this->aged70Older;
+    }
+
+    public function setAged70Older(string $aged70Older): self
+    {
+        $this->aged70Older = $aged70Older;
+
+        return $this;
+    }
+
+    public function getGdpPerCapita(): ?string
+    {
+        return $this->gdpPerCapita;
+    }
+
+    public function setGdpPerCapita(string $gdpPerCapita): self
+    {
+        $this->gdpPerCapita = $gdpPerCapita;
+
+        return $this;
+    }
+
+    public function getDiabetesPrevalence(): ?string
+    {
+        return $this->diabetesPrevalence;
+    }
+
+    public function setDiabetesPrevalence(string $diabetesPrevalence): self
+    {
+        $this->diabetesPrevalence = $diabetesPrevalence;
+
+        return $this;
+    }
+
+    public function getHandwashingFacilities(): ?string
+    {
+        return $this->handwashingFacilities;
+    }
+
+    public function setHandwashingFacilities(string $handwashingFacilities): self
+    {
+        $this->handwashingFacilities = $handwashingFacilities;
+
+        return $this;
+    }
+
+    public function getHospitalBedsPerThousand(): ?string
+    {
+        return $this->hospitalBedsPerThousand;
+    }
+
+    public function setHospitalBedsPerThousand(string $hospitalBedsPerThousand): self
+    {
+        $this->hospitalBedsPerThousand = $hospitalBedsPerThousand;
+
+        return $this;
+    }
+
+    public function getLifeExpectancy(): ?string
+    {
+        return $this->lifeExpectancy;
+    }
+
+    public function setLifeExpectancy(string $lifeExpectancy): self
+    {
+        $this->lifeExpectancy = $lifeExpectancy;
+
+        return $this;
+    }
+
+    public function getNewConfirmed(): ?int
+    {
+        return $this->newConfirmed;
+    }
+
+    public function setNewConfirmed(int $newConfirmed): self
+    {
+        $this->newConfirmed = $newConfirmed;
+
+        return $this;
+    }
+
+    public function getTotalConfirmed(): ?int
+    {
+        return $this->totalConfirmed;
+    }
+
+    public function setTotalConfirmed(int $totalConfirmed): self
+    {
+        $this->totalConfirmed = $totalConfirmed;
+
+        return $this;
+    }
+
+    public function getNewDeaths(): ?int
+    {
+        return $this->newDeaths;
+    }
+
+    public function setNewDeaths(int $newDeaths): self
+    {
+        $this->newDeaths = $newDeaths;
+
+        return $this;
+    }
+
+    public function getTotalDeaths(): ?int
+    {
+        return $this->totalDeaths;
+    }
+
+    public function setTotalDeaths(int $totalDeaths): self
+    {
+        $this->totalDeaths = $totalDeaths;
+
+        return $this;
+    }
+
+    public function getNewRecovered(): ?int
+    {
+        return $this->newRecovered;
+    }
+
+    public function setNewRecovered(int $newRecovered): self
+    {
+        $this->newRecovered = $newRecovered;
+
+        return $this;
+    }
+
+    public function getTotalRecovered(): ?int
+    {
+        return $this->totalRecovered;
+    }
+
+    public function setTotalRecovered(int $totalRecovered): self
+    {
+        $this->totalRecovered = $totalRecovered;
+
+        return $this;
+    }
+
+    public function getApiTimestamp(): ?\DateTimeImmutable
+    {
+        return $this->apiTimestamp;
+    }
+
+    public function setApiTimestamp(\DateTimeImmutable $apiTimestamp): self
+    {
+        $this->apiTimestamp = $apiTimestamp;
 
         return $this;
     }

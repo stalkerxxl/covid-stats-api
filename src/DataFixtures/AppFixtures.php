@@ -23,15 +23,15 @@ class AppFixtures extends Fixture
      */
     public function load(ObjectManager $manager): void
     {
-        $world = (new Country())
+       /* $world = (new Country())
             ->setName('WORLD')
-            ->setCode('world')
+            ->setCode('WORLD')
             ->setSlug('world')
             ->setCreatedAt(new \DateTimeImmutable());
         $manager->persist($world);
         $manager->flush();
 
-        $this->makeCountries();
+        $this->makeCountries();*/
     }
 
     private function makeCountries()
@@ -39,8 +39,10 @@ class AppFixtures extends Fixture
         call_user_func($this->countryHandler, new UpdateCountriesList());
     }
 
-    private function makeStats()
+    public function getDependencies(): array
     {
-
+        return [
+            CountryFixtures::class,
+        ];
     }
 }

@@ -65,7 +65,12 @@ final class UpdateStatHandler implements MessageHandlerInterface
      */
     public function updateStat(array $item)
     {
-        $country = $this->countryRepository->findOneBy(['code' => $item['CountryCode']]);
+        if (empty($item['Province'])){
+            $country = $this->countryRepository->findOneBy(['name' => $item['Country']]);
+        } else{
+            $country = $this->countryRepository->findOneBy(['name' => $item['Province']]);
+        }
+
         if (null == $country) {
             throw new EntityNotFoundException();
         }
@@ -82,7 +87,7 @@ final class UpdateStatHandler implements MessageHandlerInterface
             $world = (new Country())
                 ->setName('WORLD')
                 ->setCode('world')
-                ->setSlug('world')
+                ->setSlug('WORLD')
                 ->setCreatedAt(new \DateTimeImmutable());
             $this->entityManager->persist($world);
         }

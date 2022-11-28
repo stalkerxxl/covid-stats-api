@@ -12,6 +12,7 @@ framework:
         routing:
             App\Message\UpdateCountriesList: async
             App\Message\UpdateStat: async
+            App\Message\UpdateCountry: async
             # Route your messages to the transports
             # 'App\Message\YourMessage': async
 
