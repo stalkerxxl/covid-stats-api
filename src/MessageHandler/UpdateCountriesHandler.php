@@ -3,21 +3,18 @@
 namespace App\MessageHandler;
 
 use App\Entity\Country;
-use App\Exception\ApiException;
-use App\Message\UpdateCountry;
+use App\Message\UpdateCountries;
 use App\Service\ApiClient;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\EntityNotFoundException;
 use Exception;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-final class UpdateCountryHandler implements MessageHandlerInterface
+final class UpdateCountriesHandler implements MessageHandlerInterface
 {
     private ApiClient $apiClient;
     private EntityManagerInterface $entityManager;
     private ValidatorInterface $validator;
-    private ?array $data = null;
 
     public function __construct(ApiClient              $apiClient,
                                 EntityManagerInterface $entityManager,
@@ -31,28 +28,32 @@ final class UpdateCountryHandler implements MessageHandlerInterface
     /**
      * @throws Exception
      */
-    public function __invoke(UpdateCountry $message)
+    public function __invoke(UpdateCountries $message)
     {
         try {
             if (null == $message->getOfflineData()) {
-                $this->data = $this->apiClient->getSummaryStat();
-                if ($this->data['Message'] != '') {
-                    throw new Exception($this->data['Message']);
+                $data = $this->apiClient->getCountriesSummary();
+                if ($data['Message'] != '') {
+                    throw new Exception($data['Message']);
                 }
             } else {
-                $this->data = $message->getOfflineData();
+                $data = $message->getOfflineData();
             }
-            /* dd($message->getOfflineData());*/
+
             $this->makeWorldStat();
-            foreach ($this->data['Countries'] as $item) {
-                try {
-                    $this->updateCountryData($item);
-                } catch (Exception $e) {
-                    continue;
+
+            foreach ($data['Countries'] as $item) {
+
+                $country = $this->updateCountryData($item);
+                $errors = $this->validator->validate($country);
+                if ($errors->count() > 0)
                     //FIXME писать в лог
-                }
+                    $this->entityManager->detach($country);
+
+
             }
             $this->entityManager->flush();
+
         } catch (Exception $e) {
             //FIXME писать в лог
             throw new Exception($e->getMessage());
@@ -66,10 +67,9 @@ final class UpdateCountryHandler implements MessageHandlerInterface
     }
 
     /**
-     * @throws EntityNotFoundException
      * @throws Exception
      */
-    private function updateCountryData(array $item): void
+    private function updateCountryData(array $item): Country
     {
         $countryRepository = $this->entityManager->getRepository(Country::class);
         $country = $countryRepository->findOneBy(['name' => $item['Country']]);
@@ -80,6 +80,7 @@ final class UpdateCountryHandler implements MessageHandlerInterface
             $countryRepository->save($country);
         }
 
+        //FIXME DTO или сериалазйер?
         $country->setSlug($item['Slug'])
             ->setCode($item['CountryCode'])
             ->setNewConfirmed($item['NewConfirmed'])
@@ -104,5 +105,7 @@ final class UpdateCountryHandler implements MessageHandlerInterface
                 ->setHospitalBedsPerThousand($data['HospitalBedsPerThousand'])
                 ->setLifeExpectancy($data['LifeExpectancy']);
         }
+
+        return $country;
     }
 }
