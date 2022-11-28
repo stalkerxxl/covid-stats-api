@@ -1,0 +1,52 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Country index{% endblock %}
+
+{% block body %}
+    <h1>Country index</h1>
+    <div class="d-inline count float-end">
+        total: {{ countries.getTotalItemCount }}
+        {{ knp_pagination_filter(countries, {
+            'c.name': 'name' }) }}
+    </div>
+    <table class="table table-hover table-responsive">
+        <thead>
+            <tr>
+                <th>{{ knp_pagination_sortable(countries, 'Id', 'c.id') }}</th>
+                <th{% if countries.isSorted('name') %} class="sorted"{% endif %}>
+                    {{ knp_pagination_sortable(countries, 'Name', 'c.name') }}
+                </th>
+                <th>Slug</th>
+                <th>Code</th>
+                <th>CreatedAt</th>
+                <th>UpdatedAt</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for country in countries %}
+            <tr>
+                <td>{{ country.id }}</td>
+                <td>{{ country.name }}</td>
+                <td>{{ country.stat.id | default('no stat') }}</td>
+                <td>{{ country.code }}</td>
+                <td>{{ country.createdAt ? country.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ country.updatedAt ? country.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>
+                    <a href="{{ path('country_show', {'id': country.id}) }}">show</a>
+                    <a href="{{ path('country_edit', {'id': country.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="7">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {# display navigation #}
+    <div class="navigation float-end">
+        {{ knp_pagination_render(countries) }}
+    </div>
+    <a href="{{ path('country_new') }}">Create new</a>
+{% endblock %}

@@ -8,6 +8,8 @@
         "@symfony/ux-chartjs": "file:vendor/symfony/ux-chartjs/Resources/assets",
         "@symfony/webpack-encore": "^4.0.0",
         "bootstrap": "^5.2.3",
+        "bootstrap-icons": "^1.10.2",
+        "bootswatch": "^5.2.2",
         "chart.js": "^3.4.1",
         "core-js": "^3.23.0",
         "regenerator-runtime": "^0.13.9",

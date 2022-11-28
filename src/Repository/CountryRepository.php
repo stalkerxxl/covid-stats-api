@@ -39,6 +39,11 @@ class CountryRepository extends ServiceEntityRepository
         }
     }
 
+    public function findAllQuery(){
+        $qb = $this->createQueryBuilder('c');
+        return $qb;
+    }
+
 //    /**
 //     * @return Country[] Returns an array of Country objects
 //     */

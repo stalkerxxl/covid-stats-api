@@ -39,7 +39,7 @@ class Country
     #[ORM\OneToMany(mappedBy: 'country', targetEntity: Covid::class, orphanRemoval: true)]
     private Collection $covids;
 
-    #[ORM\OneToOne(mappedBy: 'country', cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(mappedBy: 'country', cascade: ['persist', 'remove'], fetch: 'EAGER')]
     private ?Stat $stat = null;
 
     public function __construct()
