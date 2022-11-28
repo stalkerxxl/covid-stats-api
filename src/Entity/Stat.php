@@ -9,7 +9,7 @@ use Gedmo\Mapping\Annotation\Timestampable;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: StatRepository::class)]
-#[UniqueEntity(['country'])]
+#[UniqueEntity(['country', 'apiTimestamp'])]
 class Stat
 {
     #[ORM\Id]
@@ -17,26 +17,15 @@ class Stat
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(type: Types::STRING)]
-    private ?string $apiUuid = null;
+    #[ORM\Column(type: Types::INTEGER)]
+    private ?int $confirmed = null;
 
     #[ORM\Column(type: Types::INTEGER)]
-    private ?int $newConfirmed = null;
+    private ?int $deaths = null;
+
 
     #[ORM\Column(type: Types::INTEGER)]
-    private ?int $totalConfirmed = null;
-
-    #[ORM\Column(type: Types::INTEGER)]
-    private ?int $newDeaths = null;
-
-    #[ORM\Column(type: Types::INTEGER)]
-    private ?int $totalDeaths = null;
-
-    #[ORM\Column(type: Types::INTEGER)]
-    private ?int $newRecovered = null;
-
-    #[ORM\Column(type: Types::INTEGER)]
-    private ?int $totalRecovered = null;
+    private ?int $recovered = null;
 
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
     private ?\DateTimeImmutable $apiTimestamp = null;
@@ -49,7 +38,7 @@ class Stat
     #[Timestampable(on: 'update')]
     private ?\DateTimeImmutable $updatedAt = null;
 
-    #[ORM\OneToOne(inversedBy: 'stat', cascade: ['persist', 'remove'])]
+    #[ORM\ManyToOne(inversedBy: 'stats')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Country $country = null;
 
@@ -58,86 +47,38 @@ class Stat
         return $this->id;
     }
 
-    public function getApiUuid(): ?string
+    public function getConfirmed(): ?int
     {
-        return $this->apiUuid;
+        return $this->confirmed;
     }
 
-    public function setApiUuid(?string $apiUuid): self
+    public function setConfirmed(int $confirmed): self
     {
-        $this->apiUuid = $apiUuid;
+        $this->confirmed = $confirmed;
 
         return $this;
     }
 
-    public function getNewConfirmed(): ?int
+    public function getDeaths(): ?int
     {
-        return $this->newConfirmed;
+        return $this->deaths;
     }
 
-    public function setNewConfirmed(int $newConfirmed): self
+    public function setDeaths(int $deaths): self
     {
-        $this->newConfirmed = $newConfirmed;
+        $this->deaths = $deaths;
 
         return $this;
     }
 
-    public function getTotalConfirmed(): ?int
+    public function getRecovered(): ?int
     {
-        return $this->totalConfirmed;
+        return $this->recovered;
     }
 
-    public function setTotalConfirmed(int $totalConfirmed): self
+    public function setRecovered(int $recovered): self
     {
-        $this->totalConfirmed = $totalConfirmed;
-
-        return $this;
-    }
-
-    public function getNewDeaths(): ?int
-    {
-        return $this->newDeaths;
-    }
-
-    public function setNewDeaths(int $newDeaths): self
-    {
-        $this->newDeaths = $newDeaths;
-
-        return $this;
-    }
-
-    public function getTotalDeaths(): ?int
-    {
-        return $this->totalDeaths;
-    }
-
-    public function setTotalDeaths(int $totalDeaths): self
-    {
-        $this->totalDeaths = $totalDeaths;
-
-        return $this;
-    }
-
-    public function getNewRecovered(): ?int
-    {
-        return $this->newRecovered;
-    }
-
-    public function setNewRecovered(int $newRecovered): self
-    {
-        $this->newRecovered = $newRecovered;
-
-        return $this;
-    }
-
-    public function getTotalRecovered(): ?int
-    {
-        return $this->totalRecovered;
-    }
-
-    public function setTotalRecovered(int $totalRecovered): self
-    {
-        $this->totalRecovered = $totalRecovered;
+        $this->recovered = $recovered;
 
         return $this;
     }
@@ -171,7 +112,7 @@ class Stat
         return $this->updatedAt;
     }
 
-    public function setUpdatedAt(?\DateTimeImmutable $updatedAt): self
+    public function setUpdatedAt(\DateTimeImmutable $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
 
@@ -183,7 +124,7 @@ class Stat
         return $this->country;
     }
 
-    public function setCountry(Country $country): self
+    public function setCountry(?Country $country): self
     {
         $this->country = $country;
 

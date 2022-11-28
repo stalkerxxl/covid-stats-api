@@ -10,9 +10,8 @@ framework:
             sync: 'sync://'
 
         routing:
-            App\Message\UpdateCountriesList: async
-            App\Message\UpdateStat: async
-            App\Message\UpdateCountry: async
+            App\Message\UpdateStatsByCountry: async
+            App\Message\UpdateCountries: async
             # Route your messages to the transports
             # 'App\Message\YourMessage': async
 

@@ -2,10 +2,9 @@
 
 namespace App\Controller;
 
-use App\Message\UpdateCountriesList;
-use App\Message\UpdateStat;
-use App\MessageHandler\UpdateCountriesListHandler;
-use App\MessageHandler\UpdateStatHandler;
+use App\Message\UpdateStatsByCountry;
+use App\MessageHandler\UpdateStatsByCountryHandler;
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\MessageBusInterface;
@@ -20,15 +19,18 @@ use Symfony\Component\Routing\Annotation\Route;
 class TestController extends AbstractController
 {
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     #[Route('/test', name: 'app_test')]
-    public function index(UpdateStatHandler $handler): Response
+    public function index(UpdateStatsByCountryHandler $handler): Response
     {
-       call_user_func($handler, new UpdateStat());
-       /* $apiTime = '2022-11-27T12:29:36.105Z';
-        $convertTime = new \DateTimeImmutable($apiTime);
-        dump((bool) $apiTime=$convertTime, $convertTime);*/
+      call_user_func($handler, new UpdateStatsByCountry('denmark'));
+       $fromApi = '2022-11-26T00:00:00Z';
+       $fromApiconvert = new \DateTimeImmutable($fromApi, new \DateTimeZone('UTC'));
+        $time2db = new \DateTimeImmutable($fromApi, new \DateTimeZone('UTC'));
+        //dump(strtotime($fromApi) == $time2db->getTimestamp());
+        //dump(strtotime($fromApi),$time2db->getTimestamp());
+        dump($fromApiconvert == $time2db);
 
 
 

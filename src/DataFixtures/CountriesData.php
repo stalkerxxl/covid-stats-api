@@ -2,7 +2,7 @@
 
 namespace App\DataFixtures;
 
-class CountryData
+class CountriesData
 {
 
     public static function getJsonData(): array

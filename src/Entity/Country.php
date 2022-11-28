@@ -91,6 +91,14 @@ class Country
     #[ORM\Column]
     private ?\DateTimeImmutable $apiTimestamp = null;
 
+    #[ORM\OneToMany(mappedBy: 'country', targetEntity: Stat::class, orphanRemoval: true)]
+    private Collection $stats;
+
+    public function __construct()
+    {
+        $this->stats = new ArrayCollection();
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -152,36 +160,6 @@ class Country
     public function setUpdatedAt(?\DateTimeImmutable $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Covid>
-     */
-    public function getCovids(): Collection
-    {
-        return $this->covids;
-    }
-
-    public function addCovid(Covid $covid): self
-    {
-        if (!$this->covids->contains($covid)) {
-            $this->covids->add($covid);
-            $covid->setCountry($this);
-        }
-
-        return $this;
-    }
-
-    public function removeCovid(Covid $covid): self
-    {
-        if ($this->covids->removeElement($covid)) {
-            // set the owning side to null (unless already changed)
-            if ($covid->getCountry() === $this) {
-                $covid->setCountry(null);
-            }
-        }
 
         return $this;
     }
@@ -398,6 +376,36 @@ class Country
     public function setApiTimestamp(\DateTimeImmutable $apiTimestamp): self
     {
         $this->apiTimestamp = $apiTimestamp;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Stat>
+     */
+    public function getStats(): Collection
+    {
+        return $this->stats;
+    }
+
+    public function addStat(Stat $stat): self
+    {
+        if (!$this->stats->contains($stat)) {
+            $this->stats->add($stat);
+            $stat->setCountry($this);
+        }
+
+        return $this;
+    }
+
+    public function removeStat(Stat $stat): self
+    {
+        if ($this->stats->removeElement($stat)) {
+            // set the owning side to null (unless already changed)
+            if ($stat->getCountry() === $this) {
+                $stat->setCountry(null);
+            }
+        }
 
         return $this;
     }

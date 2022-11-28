@@ -40,9 +40,9 @@ class ApiClient
     /**
      * @throws ApiException
      */
-    public function getCountriesList(): array
+    public function getCountriesSummary(): array
     {
-        $this->endpoint = '/countries';
+        $this->endpoint = '/summary';
 
         return $this->_send();
     }
@@ -50,9 +50,9 @@ class ApiClient
     /**
      * @throws ApiException
      */
-    public function getSummaryStat(): array
+    public function getTotalDayOneByCountrySlug(string $slug): array
     {
-        $this->endpoint = '/summary';
+        $this->endpoint = '/total/dayone/country/' . $slug;
 
         return $this->_send();
     }

@@ -5,7 +5,7 @@ namespace App\MessageHandler;
 use App\Entity\Country;
 use App\Entity\Stat;
 use App\Exception\ApiException;
-use App\Message\UpdateStat;
+use App\Message\UpdateStatsByCountry;
 use App\Repository\CountryRepository;
 use App\Repository\StatRepository;
 use App\Service\ApiClient;
@@ -17,7 +17,7 @@ use Exception;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-final class UpdateStatHandler implements MessageHandlerInterface
+final class UpdateStatsByCountryHandler implements MessageHandlerInterface
 {
     private ApiClient $apiClient;
     private EntityManagerInterface $entityManager;
@@ -43,38 +43,29 @@ final class UpdateStatHandler implements MessageHandlerInterface
      * @throws ApiException
      * @throws Exception
      */
-    public function __invoke(UpdateStat $message)
+    public function __invoke(UpdateStatsByCountry $message)
     {
         //FIXME сделать DTO
-        $this->response = $this->apiClient->getSummaryStat();
-        if ($this->response['Message'] != '') {
-            throw new \Exception($this->response['Message']);
-        }
-        $this->makeWorldStat();
+        $this->response = $this->apiClient->getTotalDayOneByCountrySlug($message->getSlug());
 
-        foreach ($this->response['Countries'] as $item) {
-            $this->updateStat($item);
+        foreach ($this->response as $item) {
+            $country = $this->countryRepository->findOneBy(['name' => $item['Country']]);
+            $stat = $this->statRepository->findOneBy(['country' => $country, 'apiTimestamp' => new \DateTimeImmutable($item['Date'], new \DateTimeZone('UTC'))]);
+            if ($stat)
+                continue;
+
+            $stat = new Stat();
+            $stat
+                ->setConfirmed($item['Confirmed'])
+                ->setDeaths($item['Deaths'])
+                ->setRecovered($item['Recovered'])
+                ->setApiTimestamp(new \DateTimeImmutable($item['Date'], new \DateTimeZone('UTC')))
+                ->setCountry($country);
+
+            $this->entityManager->persist($stat);
         }
 
         $this->entityManager->flush();
-    }
-
-    /**
-     * @throws EntityNotFoundException
-     * @throws Exception
-     */
-    public function updateStat(array $item)
-    {
-        if (empty($item['Province'])){
-            $country = $this->countryRepository->findOneBy(['name' => $item['Country']]);
-        } else{
-            $country = $this->countryRepository->findOneBy(['name' => $item['Province']]);
-        }
-
-        if (null == $country) {
-            throw new EntityNotFoundException();
-        }
-        $this->makeStatEntity($country, $item);
     }
 
     /**
@@ -93,7 +84,7 @@ final class UpdateStatHandler implements MessageHandlerInterface
         }
 
         $worldData = $this->response['Global'];
-        $worldData['ID']= $this->response['ID'];
+        $worldData['ID'] = $this->response['ID'];
 
         $this->makeStatEntity($world, $worldData);
 
@@ -107,7 +98,6 @@ final class UpdateStatHandler implements MessageHandlerInterface
      */
     private function makeStatEntity(Country $country, array $item): void
     {
-        $stat = $country->getStat();
 
         if (null == $stat) {
             $stat = new Stat();

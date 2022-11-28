@@ -2,7 +2,7 @@
 
 namespace App\Message;
 
-final class UpdateCountry
+final class UpdateCountries
 {
     private ?array $offlineData;
 
