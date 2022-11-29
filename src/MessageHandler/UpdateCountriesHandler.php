@@ -25,7 +25,7 @@ final class UpdateCountriesHandler implements MessageHandlerInterface
                                 EntityManagerInterface   $entityManager,
                                 ValidatorInterface       $validator,
                                 EventDispatcherInterface $eventDispatcher,
-    LoggerInterface $messengerLogger)
+                                LoggerInterface          $messengerLogger)
     {
         $this->apiClient = $apiClient;
         $this->entityManager = $entityManager;
@@ -57,9 +57,10 @@ final class UpdateCountriesHandler implements MessageHandlerInterface
 
                 $country = $this->updateCountryData($item);
                 $errors = $this->validator->validate($country);
-                if ($errors->count() > 0)
+                if ($errors->count() > 0) {
                     $this->logger->error('ошибка валидации', ['item' => $item, 'errors' => (string)$errors]);
                     $this->entityManager->detach($country);
+                }
             }
             $this->entityManager->flush();
 

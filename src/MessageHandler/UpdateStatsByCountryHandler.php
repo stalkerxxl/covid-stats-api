@@ -43,7 +43,6 @@ final class UpdateStatsByCountryHandler implements MessageHandlerInterface
      */
     public function __invoke(UpdateStatsByCountry $message)
     {
-
         try {
             $response = $this->apiClient->getTotalDayOneByCountrySlug($message->getSlug());
         } catch (ApiException $e) {

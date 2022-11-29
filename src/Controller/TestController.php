@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\DataFixtures\CountriesData;
 use App\Message\UpdateCountries;
 use App\Message\UpdateStatsByCountry;
 use App\MessageHandler\UpdateCountriesHandler;
@@ -20,15 +21,7 @@ class TestController extends AbstractController
     public function index(UpdateCountriesHandler $handler): Response
     {
       //call_user_func($handler, new UpdateStatsByCountry('denmark'));
-      call_user_func($handler, new UpdateCountries());
-       $fromApi = '2022-11-26T00:00:00Z';
-       $fromApiconvert = new \DateTimeImmutable($fromApi, new \DateTimeZone('UTC'));
-        $time2db = new \DateTimeImmutable($fromApi, new \DateTimeZone('UTC'));
-        //dump(strtotime($fromApi) == $time2db->getTimestamp());
-        //dump(strtotime($fromApi),$time2db->getTimestamp());
-        dump($fromApiconvert == $time2db);
-
-
+      call_user_func($handler, new UpdateCountries(CountriesData::getJsonData()));
 
         return $this->render('test/index.html.twig', [
             'controller_name' => 'TestController',

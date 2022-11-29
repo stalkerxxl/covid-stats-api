@@ -2,7 +2,6 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\Country;
 use App\Message\UpdateCountries;
 use App\MessageHandler\UpdateCountriesHandler;
 use Doctrine\Bundle\FixturesBundle\Fixture;
