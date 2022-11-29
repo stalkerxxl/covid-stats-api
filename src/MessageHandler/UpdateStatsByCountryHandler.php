@@ -39,13 +39,17 @@ final class UpdateStatsByCountryHandler implements MessageHandlerInterface
     }
 
     /**
-     * @throws ApiException
      * @throws Exception
      */
     public function __invoke(UpdateStatsByCountry $message)
     {
-        //FIXME сделать DTO
-        $response = $this->apiClient->getTotalDayOneByCountrySlug($message->getSlug());
+
+        try {
+            $response = $this->apiClient->getTotalDayOneByCountrySlug($message->getSlug());
+        } catch (ApiException $e) {
+            $this->logger->error($e->getMessage(), ['exception' => $e]);
+            throw new Exception($e->getMessage());
+        }
 
         foreach ($response as $item) {
             $country = $this->countryRepository->findOneBy(['name' => $item['Country']]);
@@ -55,16 +59,19 @@ final class UpdateStatsByCountryHandler implements MessageHandlerInterface
                 continue;
 
             $stat = new Stat();
-            $stat
-                ->setConfirmed($item['Confirmed'])
+            $stat->setConfirmed($item['Confirmed'])
                 ->setDeaths($item['Deaths'])
                 ->setRecovered($item['Recovered'])
                 ->setApiTimestamp(new \DateTimeImmutable($item['Date'], new \DateTimeZone('UTC')))
                 ->setCountry($country);
 
+            $errors = $this->validator->validate($stat);
+            if ($errors->count() > 0) {
+                $this->logger->error('ошибка валидации', ['item' => $item, 'errors' => (string)$errors]);
+                continue;
+            }
             $this->entityManager->persist($stat);
         }
-
         $this->entityManager->flush();
     }
 }

@@ -17,7 +17,7 @@ class CountryController extends AbstractController
     #[Route('/', name: 'country_index', methods: ['GET'])]
     public function index(Request $request, CountryRepository $countryRepository, PaginatorInterface $paginator): Response
     {
-        $query = $countryRepository->findAllQuery();
+        $query = $countryRepository->findAllQueryBuilder();
         $page = $request->query->getInt('page', 1);
         $limit = $request->query->getInt('limit', 10);
         $paginator = $paginator->paginate($query, $page, $limit);

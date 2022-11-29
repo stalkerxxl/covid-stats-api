@@ -8,6 +8,7 @@ use App\Message\UpdateCountries;
 use App\Service\ApiClient;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -18,16 +19,19 @@ final class UpdateCountriesHandler implements MessageHandlerInterface
     private EntityManagerInterface $entityManager;
     private ValidatorInterface $validator;
     private EventDispatcherInterface $eventDispatcher;
+    private LoggerInterface $logger;
 
     public function __construct(ApiClient                $apiClient,
                                 EntityManagerInterface   $entityManager,
                                 ValidatorInterface       $validator,
-                                EventDispatcherInterface $eventDispatcher)
+                                EventDispatcherInterface $eventDispatcher,
+    LoggerInterface $messengerLogger)
     {
         $this->apiClient = $apiClient;
         $this->entityManager = $entityManager;
         $this->validator = $validator;
         $this->eventDispatcher = $eventDispatcher;
+        $this->logger = $messengerLogger;
     }
 
     /**
@@ -54,8 +58,8 @@ final class UpdateCountriesHandler implements MessageHandlerInterface
                 $country = $this->updateCountryData($item);
                 $errors = $this->validator->validate($country);
                 if ($errors->count() > 0)
+                    $this->logger->error('ошибка валидации', ['item' => $item, 'errors' => (string)$errors]);
                     $this->entityManager->detach($country);
-                //FIXME писать в лог
             }
             $this->entityManager->flush();
 
@@ -63,7 +67,7 @@ final class UpdateCountriesHandler implements MessageHandlerInterface
             $this->eventDispatcher->dispatch($event);
 
         } catch (Exception $e) {
-            //FIXME писать в лог
+            $this->logger->error($e->getMessage(), ['exception' => $e]);
             throw new Exception($e->getMessage());
         }
     }

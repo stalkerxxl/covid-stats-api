@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Country;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -39,9 +40,9 @@ class CountryRepository extends ServiceEntityRepository
         }
     }
 
-    public function findAllQuery(){
-        $qb = $this->createQueryBuilder('c');
-        return $qb;
+    public function findAllQueryBuilder(): QueryBuilder
+    {
+        return $this->createQueryBuilder('c');
     }
 
 //    /**
