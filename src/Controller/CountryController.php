@@ -37,6 +37,7 @@ class CountryController extends AbstractController
 
         $sort = $request->query->get('sort');
         $direction = $request->query->get('direction');
+
         if ($sort && $direction) {
             $criteria = Criteria::create()
                 ->orderBy([$sort => $direction]);
@@ -47,7 +48,7 @@ class CountryController extends AbstractController
 
         return $this->render('country/show.html.twig', [
             'country' => $country,
-            'allStats' => $allStats,
+            //'allStats' => $allStats,
             'paginator' => $paginator
         ]);
     }
