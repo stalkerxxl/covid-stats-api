@@ -46,7 +46,7 @@ class CountryController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'country_show', methods: ['GET'])]
+    #[Route('/{id}', name: 'country.show', methods: ['GET'])]
     public function show(Country $country): Response
     {
         return $this->render('country/show.html.twig', [
