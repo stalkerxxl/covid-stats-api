@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\OrderBy;
 use Gedmo\Mapping\Annotation\Timestampable;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
@@ -91,7 +92,8 @@ class Country
     #[ORM\Column]
     private ?\DateTimeImmutable $apiTimestamp = null;
 
-    #[ORM\OneToMany(mappedBy: 'country', targetEntity: Stat::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'country', targetEntity: Stat::class, fetch: 'EAGER', orphanRemoval: true)]
+    #[OrderBy(['apiTimestamp' => 'DESC'])]
     private Collection $stats;
 
     public function __construct()
