@@ -12,6 +12,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\UX\Chartjs\Builder\ChartBuilder;
+use Symfony\UX\Chartjs\Builder\ChartBuilderInterface;
+use Symfony\UX\Chartjs\Model\Chart;
 
 #[Route('/country')]
 class CountryController extends AbstractController
@@ -29,12 +32,12 @@ class CountryController extends AbstractController
         ]);
     }
 
-
     #[Route('/{slug}', name: 'country.show', methods: ['GET'])]
     public function show(Country $country, Request $request, PaginatorInterface $paginator): Response
     {
         $allStats = $country->getStats()->toArray();
 
+        $page = $request->query->getInt('page', 1);
         $sort = $request->query->get('sort');
         $direction = $request->query->get('direction');
 
@@ -43,14 +46,39 @@ class CountryController extends AbstractController
                 ->orderBy([$sort => $direction]);
             $allStats = (new ArrayCollection($allStats))->matching($criteria);
         }
-        $page = $request->query->getInt('page', 1);
         $paginator = $paginator->paginate($allStats, $page);
+
+        $chart = $this->createChat();
 
         return $this->render('country/show.html.twig', [
             'country' => $country,
+            'chart' => $chart,
             //'allStats' => $allStats,
             'paginator' => $paginator
         ]);
+    }
+
+    public function createChat(): Chart
+    {
+        $chart = (new ChartBuilder())->createChart(Chart::TYPE_LINE);
+        $chart->setData([
+            'datasets' => [
+                [
+                  'data' => [['x'=> 5, 'y'=>2]]
+                ]
+            ],
+        ]);
+
+        $chart->setOptions([
+            'scales' => [
+                'y' => [
+                    'suggestedMin' => 0,
+                    'suggestedMax' => 100,
+                ],
+            ],
+        ]);
+
+        return $chart;
     }
 
     #[Route('/{id}/edit', name: 'country_edit', methods: ['GET', 'POST'])]
@@ -67,7 +95,7 @@ class CountryController extends AbstractController
 
         return $this->renderForm('country/edit.html.twig', [
             'country' => $country,
-            'form' => $form,
+            'form' => $form->createView(),
         ]);
     }
 

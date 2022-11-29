@@ -23,7 +23,7 @@ class HomeController extends AbstractController
         }, $stats);
 
         $newRecorded = array_map(function (Stat $item) {
-            return $item->getNewConfirmed();
+            return $item->getConfirmed();
         }, $stats);
 
 
