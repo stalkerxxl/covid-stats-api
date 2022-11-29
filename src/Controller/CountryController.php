@@ -5,6 +5,8 @@ namespace App\Controller;
 use App\Entity\Country;
 use App\Form\CountryType;
 use App\Repository\CountryRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Criteria;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -27,30 +29,26 @@ class CountryController extends AbstractController
         ]);
     }
 
-    #[Route('/new', name: 'country_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, CountryRepository $countryRepository): Response
+
+    #[Route('/{slug}', name: 'country.show', methods: ['GET'])]
+    public function show(Country $country, Request $request, PaginatorInterface $paginator): Response
     {
-        $country = new Country();
-        $form = $this->createForm(CountryType::class, $country);
-        $form->handleRequest($request);
+        $allStats = $country->getStats()->toArray();
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $countryRepository->save($country, true);
-
-            return $this->redirectToRoute('country_index', [], Response::HTTP_SEE_OTHER);
+        $sort = $request->query->get('sort');
+        $direction = $request->query->get('direction');
+        if ($sort && $direction) {
+            $criteria = Criteria::create()
+                ->orderBy([$sort => $direction]);
+            $allStats = (new ArrayCollection($allStats))->matching($criteria);
         }
+        $page = $request->query->getInt('page', 1);
+        $paginator = $paginator->paginate($allStats, $page);
 
-        return $this->renderForm('country/new.html.twig', [
-            'country' => $country,
-            'form' => $form,
-        ]);
-    }
-
-    #[Route('/{id}', name: 'country.show', methods: ['GET'])]
-    public function show(Country $country): Response
-    {
         return $this->render('country/show.html.twig', [
             'country' => $country,
+            'allStats' => $allStats,
+            'paginator' => $paginator
         ]);
     }
 
@@ -63,7 +61,7 @@ class CountryController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $countryRepository->save($country, true);
 
-            return $this->redirectToRoute('country_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('country.index', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('country/edit.html.twig', [
@@ -79,6 +77,6 @@ class CountryController extends AbstractController
             $countryRepository->remove($country, true);
         }
 
-        return $this->redirectToRoute('country_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('country.index', [], Response::HTTP_SEE_OTHER);
     }
 }

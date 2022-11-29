@@ -17,7 +17,7 @@ class CountryType extends AbstractType
             ->add('code')
             ->add('createdAt')
             ->add('updatedAt')
-            ->add('stat')
+            ->add('stats')
         ;
     }
 

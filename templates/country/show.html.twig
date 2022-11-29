@@ -3,38 +3,70 @@
 {% block title %}Country{% endblock %}
 
 {% block body %}
-    <h1>Country</h1>
+    <h1>{{ country.name }}</h1>
+    <!-- Nav tabs -->
+    <div class="row">
+        <div class="col justify-content-end">
+            <ul class="nav nav-tabs float-end" id="myTab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="home-tab" data-bs-toggle="tab" data-bs-target="#home"
+                            type="button"
+                            role="tab">График
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile"
+                            type="button"
+                            role="tab">Таблица
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="messages-tab" data-bs-toggle="tab" data-bs-target="#messages"
+                            type="button"
+                            role="tab">О стране
+                    </button>
+                </li>
+            </ul>
+        </div>
+    </div>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ country.id }}</td>
-            </tr>
-            <tr>
-                <th>Name</th>
-                <td>{{ country.name }}</td>
-            </tr>
-            <tr>
-                <th>Slug</th>
-                <td>{{ country.slug }}</td>
-            </tr>
-            <tr>
-                <th>Code</th>
-                <td>{{ country.code }}</td>
-            </tr>
-            <tr>
-                <th>CreatedAt</th>
-                <td>{{ country.createdAt ? country.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
-            <tr>
-                <th>UpdatedAt</th>
-                <td>{{ country.updatedAt ? country.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
-        </tbody>
-    </table>
+    <!-- Tab panes -->
+    <div class="tab-content">
+        <div class="tab-pane" id="home" role="tabpanel" tabindex="0"></div>
+        <div class="tab-pane active" id="profile" role="tabpanel" tabindex="0">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Date</th>
+                    <th{% if paginator.isSorted('Confirmed') %} class="sorted"{% endif %}>
+                        {{ knp_pagination_sortable(paginator, 'Confirmed', 'confirmed') }}
+                    </th>
+                    <th>totalDeaths</th>
+                    <th>totalRecovered</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for stat in paginator %}
+                <tr>
+                    <td>{{ stat.apiTimestamp|date}}</td>
+                    <td>{{ stat.confirmed | default('--') }}</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            {# display navigation #}
+            <div class="navigation float-end">
+                {{ knp_pagination_render(paginator) }}
+            </div>
+        </div>
+        <div class="tab-pane" id="messages" role="tabpanel" tabindex="0">...</div>
+    </div>
 
-    <a href="{{ path('country_index') }}">back to list</a>
+
+
+    <a href="{{ path('country.index') }}">back to list</a>
 
     <a href="{{ path('country_edit', {'id': country.id}) }}">edit</a>
 
