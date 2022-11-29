@@ -409,4 +409,9 @@ class Country
 
         return $this;
     }
+
+    public function getFlag(): string
+    {
+        return strtolower($this->code) . '.png';
+    }
 }

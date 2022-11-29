@@ -14,7 +14,7 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/country')]
 class CountryController extends AbstractController
 {
-    #[Route('/', name: 'country_index', methods: ['GET'])]
+    #[Route('/', name: 'country.index', methods: ['GET'])]
     public function index(Request $request, CountryRepository $countryRepository, PaginatorInterface $paginator): Response
     {
         $query = $countryRepository->findAllQueryBuilder();

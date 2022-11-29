@@ -21,7 +21,7 @@ class TestController extends AbstractController
     public function index(UpdateCountriesHandler $handler): Response
     {
       //call_user_func($handler, new UpdateStatsByCountry('denmark'));
-      call_user_func($handler, new UpdateCountries(CountriesData::getJsonData()));
+      //call_user_func($handler, new UpdateCountries(CountriesData::getJsonData()));
 
         return $this->render('test/index.html.twig', [
             'controller_name' => 'TestController',
