@@ -15,6 +15,7 @@
         "knplabs/knp-paginator-bundle": "^6.0",
         "pagerfanta/doctrine-collections-adapter": "^3.6",
         "pagerfanta/doctrine-orm-adapter": "^3.6",
+        "pagerfanta/twig": "^3.6",
         "sensio/framework-extra-bundle": "^6.2",
         "stof/doctrine-extensions-bundle": "^1.7",
         "symfony/console": "6.1.*",

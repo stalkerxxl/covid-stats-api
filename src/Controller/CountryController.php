@@ -8,6 +8,8 @@ use App\Repository\CountryRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Knp\Component\Pager\PaginatorInterface;
+use Pagerfanta\Adapter\ArrayAdapter;
+use Pagerfanta\Pagerfanta;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,15 +22,16 @@ use Symfony\UX\Chartjs\Model\Chart;
 class CountryController extends AbstractController
 {
     #[Route('/', name: 'country.index', methods: ['GET'])]
-    public function index(Request $request, CountryRepository $countryRepository, PaginatorInterface $paginator): Response
+    public function index(Request $request, CountryRepository $countryRepository): Response
     {
-        $query = $countryRepository->findAllQueryBuilder();
+        $query = $countryRepository->findAll();
         $page = $request->query->getInt('page', 1);
         $limit = $request->query->getInt('limit', 10);
-        $paginator = $paginator->paginate($query, $page, $limit);
+        $pager = (new Pagerfanta(new ArrayAdapter($query)));
+        $pager->setCurrentPage($page)->setMaxPerPage($limit);
 
         return $this->render('country/index.html.twig', [
-            'countries' => $paginator,
+            'pager' => $pager,
         ]);
     }
 
@@ -64,7 +67,7 @@ class CountryController extends AbstractController
         $chart->setData([
             'datasets' => [
                 [
-                  'data' => [['x'=> 5, 'y'=>2]]
+                    'data' => [['x' => 5, 'y' => 2]]
                 ]
             ],
         ]);

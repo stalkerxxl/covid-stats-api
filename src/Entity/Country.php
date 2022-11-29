@@ -92,7 +92,7 @@ class Country
     #[ORM\Column]
     private ?\DateTimeImmutable $apiTimestamp = null;
 
-    #[ORM\OneToMany(mappedBy: 'country', targetEntity: Stat::class, fetch: 'EAGER', orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'country', targetEntity: Stat::class, fetch: 'LAZY', orphanRemoval: true)]
     #[OrderBy(['apiTimestamp' => 'DESC'])]
     private Collection $stats;
 

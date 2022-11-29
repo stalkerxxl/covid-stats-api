@@ -4,48 +4,28 @@
 
 {% block body %}
     <h1>Country index</h1>
-    <div class="d-inline count float-end">
-        total: {{ countries.getTotalItemCount }}
-        {{ knp_pagination_filter(countries, {
-            'c.name': 'name' }) }}
+    <div class="count float-end">
+        total: {{ pager.count }}
     </div>
     <table class="table table-hover">
         <thead>
         <tr>
-            <th>{{ knp_pagination_sortable(countries, 'id', 'c.id') }}</th>
-            <th{% if countries.isSorted('continent') %} class="sorted"{% endif %}>
-                {{ knp_pagination_sortable(countries, 'continent', 'c.continent') }}
-            </th>
-            <th{% if countries.isSorted('code') %} class="sorted"{% endif %}>
-                {{ knp_pagination_sortable(countries, 'code', 'c.code') }}
-            </th>
-            <th{% if countries.isSorted('name') %} class="sorted"{% endif %}>
-                {{ knp_pagination_sortable(countries, 'name', 'c.name') }}
-            </th>
-            <th{% if countries.isSorted('newConfirmed') %} class="sorted"{% endif %}>
-                {{ knp_pagination_sortable(countries, 'newConfirmed', 'c.newConfirmed') }}
-            </th>
-            <th{% if countries.isSorted('TotalConfirmed') %} class="sorted"{% endif %}>
-                {{ knp_pagination_sortable(countries, 'totalConfirmed', 'c.totalConfirmed') }}
-            </th>
-            <th{% if countries.isSorted('newDeaths') %} class="sorted"{% endif %}>
-                {{ knp_pagination_sortable(countries, 'newDeaths', 'c.newDeaths') }}
-            </th>
-            <th{% if countries.isSorted('totalDeaths') %} class="sorted"{% endif %}>
-                {{ knp_pagination_sortable(countries, 'totalDeaths', 'c.totalDeaths') }}
-            </th>
-            <th{% if countries.isSorted('newRecovered') %} class="sorted"{% endif %}>
-                {{ knp_pagination_sortable(countries, 'newRecovered', 'c.newRecovered') }}
-            </th>
-            <th{% if countries.isSorted('totalRecovered') %} class="sorted"{% endif %}>
-                {{ knp_pagination_sortable(countries, 'totalRecovered', 'c.totalRecovered') }}
-            </th>
+            <th>Id</th>
+            <th>continent</th>
+            <th>code</th>
+            <th>name</th>
+            <th>newConfirmed</th>
+            <th>TotalConfirmed</th>
+            <th>newDeaths</th>
+            <th>totalDeaths</th>
+            <th>newRecovered</th>
+            <th>totalRecovered</th>
             <th>UpdatedAt</th>
             <th>actions</th>
         </tr>
         </thead>
         <tbody>
-        {% for country in countries %}
+        {% for country in pager %}
             <tr>
                 <td>{{ country.id }}</td>
                 <td>{{ country.continent | default('--') }}</td>
@@ -74,6 +54,6 @@
     </table>
     {# display navigation #}
     <div class="navigation float-end">
-        {{ knp_pagination_render(countries) }}
+        {{ pagerfanta(pager, {'omitFirstPage': true }) }}
     </div>
 {% endblock %}
