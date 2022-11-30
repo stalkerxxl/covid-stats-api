@@ -36,7 +36,10 @@ class CountryController extends AbstractController
     {
         $page = $request->query->getInt('page', 1);
         $limit = $request->query->getInt('limit', 10);
-        $pager = $countryRepository->findAllWithSearchPager(null, $page, $limit);
+        $search = $request->query->get('search');
+        $sortBy = $request->query->get('sortBy');
+        $direction = $request->query->get('direction');
+        $pager = $countryRepository->findAllWithSearchPager($search, $page, $limit, $sortBy, $direction);
 
         return $this->render('country/index.html.twig', [
             'pager' => $pager,
@@ -71,13 +74,13 @@ class CountryController extends AbstractController
 
     public function createChat(Country $country): Chart
     {
-      $repo = $this->entityManager->getRepository(Stat::class);
-      $data = $repo->findBy(['country'=> $country], ['apiTimestamp'=>'ASC']);
+        $repo = $this->entityManager->getRepository(Stat::class);
+        $data = $repo->findBy(['country' => $country], ['apiTimestamp' => 'ASC']);
 
-        $confirmed = array_map(function (Stat $item){
+        $confirmed = array_map(function (Stat $item) {
             return $item->getConfirmed();
         }, $data);
-        $date = array_map(function (Stat $item){
+        $date = array_map(function (Stat $item) {
             return $item->getApiTimestamp()->format('Y');
         }, $data);
 
@@ -100,7 +103,7 @@ class CountryController extends AbstractController
                 ],
             ],
         ]);
-dump($chart);
+        dump($chart);
         return $chart;
     }
 

@@ -4,8 +4,22 @@
 
 {% block body %}
     <h1>Country index</h1>
-    <div class="count float-end">
-        {# total: {{ pager.count }} #}
+    <div class="row">
+        <div class="col">total: {{ pager.count }}</div>
+        <div class="col"></div>
+        <div class="col">
+            <form action="{{ path('country.index') }}" class="form form-control">
+                <label>
+                    <input type="text" class="form-control" name="search" value="{{ app.request.query.get('search') }}"
+                           placeholder="search name...">
+                </label>
+                <button class="btn btn-primary" type="submit">Filter</button>
+                {% if app.request.query.count %}
+                    <a class="btn btn-danger" href="{{ path('country.index') }}">X</a>
+                {% endif %}
+            </form>
+
+        </div>
     </div>
     <table class="table table-hover">
         <thead>

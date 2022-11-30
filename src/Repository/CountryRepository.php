@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Country;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
@@ -43,20 +44,18 @@ class CountryRepository extends ServiceEntityRepository
         }
     }
 
-    public function findAllWithSearchPager(?string $s, int $page, int $limit,
-                                           string  $sortBy = 'name', string $direction = 'ASC'): Pagerfanta
+    public function findAllWithSearchPager(?string $search, int $page, int $limit,
+                                           ?string $sortBy, ?string $direction): Pagerfanta
     {
-        $qb = $this->createQueryBuilder('c')
-           ->addSelect('c.id', 'c.name', 'c.code',
-                'c.slug','c.continent',
-                'c.newConfirmed', 'c.totalConfirmed',
-                'c.newDeaths', 'c.totalDeaths', 'c.newRecovered',
-                'c.totalRecovered', 'c.updatedAt')
-           ->orderBy('c.'.$sortBy, $direction);
+        $qb = $this->createQueryBuilder('c');
+        if ($sortBy && $direction) {
+            $qb->orderBy('c.' . $sortBy, $direction);
+        } else
+            $qb->orderBy('c.name', Criteria::ASC);
 
-        if ($s)
+        if ($search)
             $qb->andWhere('c.name LIKE :search')
-                ->setParameter('search', '%' . $s . '%', Types::STRING);
+                ->setParameter('search', '%' . $search . '%', Types::STRING);
 
         return Pagerfanta::createForCurrentPageWithMaxPerPage(new QueryAdapter($qb), $page, $limit);
     }
