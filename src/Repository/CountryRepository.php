@@ -4,8 +4,11 @@ namespace App\Repository;
 
 use App\Entity\Country;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
+use Pagerfanta\Doctrine\ORM\QueryAdapter;
+use Pagerfanta\Pagerfanta;
 
 /**
  * @extends ServiceEntityRepository<Country>
@@ -40,9 +43,22 @@ class CountryRepository extends ServiceEntityRepository
         }
     }
 
-    public function findAllQueryBuilder(): QueryBuilder
+    public function findAllWithSearchPager(?string $s, int $page, int $limit,
+                                           string  $sortBy = 'name', string $direction = 'ASC'): Pagerfanta
     {
-        return $this->createQueryBuilder('c');
+        $qb = $this->createQueryBuilder('c')
+           ->addSelect('c.id', 'c.name', 'c.code',
+                'c.slug','c.continent',
+                'c.newConfirmed', 'c.totalConfirmed',
+                'c.newDeaths', 'c.totalDeaths', 'c.newRecovered',
+                'c.totalRecovered', 'c.updatedAt')
+           ->orderBy('c.'.$sortBy, $direction);
+
+        if ($s)
+            $qb->andWhere('c.name LIKE :search')
+                ->setParameter('search', '%' . $s . '%', Types::STRING);
+
+        return Pagerfanta::createForCurrentPageWithMaxPerPage(new QueryAdapter($qb), $page, $limit);
     }
 
 //    /**

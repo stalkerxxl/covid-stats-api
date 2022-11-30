@@ -3,10 +3,13 @@
 namespace App\Controller;
 
 use App\Entity\Country;
+use App\Entity\Stat;
 use App\Form\CountryType;
 use App\Repository\CountryRepository;
+use App\Repository\StatRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
+use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Pagerfanta\Adapter\ArrayAdapter;
 use Pagerfanta\Pagerfanta;
@@ -21,14 +24,19 @@ use Symfony\UX\Chartjs\Model\Chart;
 #[Route('/country')]
 class CountryController extends AbstractController
 {
+    private EntityManagerInterface $entityManager;
+
+    public function __construct(EntityManagerInterface $entityManager)
+    {
+        $this->entityManager = $entityManager;
+    }
+
     #[Route('/', name: 'country.index', methods: ['GET'])]
     public function index(Request $request, CountryRepository $countryRepository): Response
     {
-        $query = $countryRepository->findAll();
         $page = $request->query->getInt('page', 1);
         $limit = $request->query->getInt('limit', 10);
-        $pager = (new Pagerfanta(new ArrayAdapter($query)));
-        $pager->setCurrentPage($page)->setMaxPerPage($limit);
+        $pager = $countryRepository->findAllWithSearchPager(null, $page, $limit);
 
         return $this->render('country/index.html.twig', [
             'pager' => $pager,
@@ -51,7 +59,7 @@ class CountryController extends AbstractController
         }
         $paginator = $paginator->paginate($allStats, $page);
 
-        $chart = $this->createChat();
+        $chart = $this->createChat($country);
 
         return $this->render('country/show.html.twig', [
             'country' => $country,
@@ -61,13 +69,26 @@ class CountryController extends AbstractController
         ]);
     }
 
-    public function createChat(): Chart
+    public function createChat(Country $country): Chart
     {
+      $repo = $this->entityManager->getRepository(Stat::class);
+      $data = $repo->findBy(['country'=> $country], ['apiTimestamp'=>'ASC']);
+
+        $confirmed = array_map(function (Stat $item){
+            return $item->getConfirmed();
+        }, $data);
+        $date = array_map(function (Stat $item){
+            return $item->getApiTimestamp()->format('Y');
+        }, $data);
+
         $chart = (new ChartBuilder())->createChart(Chart::TYPE_LINE);
         $chart->setData([
+            'labels' => $date,
             'datasets' => [
                 [
-                    'data' => [['x' => 5, 'y' => 2]]
+                    'label' => 'My First dataset',
+                    'backgroundColor' => 'rgb(255, 99, 132)',
+                    'data' => $confirmed,
                 ]
             ],
         ]);
@@ -76,11 +97,10 @@ class CountryController extends AbstractController
             'scales' => [
                 'y' => [
                     'suggestedMin' => 0,
-                    'suggestedMax' => 100,
                 ],
             ],
         ]);
-
+dump($chart);
         return $chart;
     }
 
