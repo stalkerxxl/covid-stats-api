@@ -18,22 +18,30 @@
                     <a class="btn btn-danger" href="{{ path('country.index') }}">X</a>
                 {% endif %}
             </form>
-
         </div>
     </div>
     <table class="table table-hover">
+        {% if app.request.query.get('direction') == 'desc' %}
+            {% set nextDirection = 'asc' %}
+        {% else %}
+            {% set nextDirection = 'desc' %}
+        {% endif %}
+        {% set queryParams = app.request.query.all %}
         <thead>
         <tr>
             <th>Id</th>
             <th>continent</th>
             <th>code</th>
-            <th>name</th>
-            <th>newConfirmed</th>
-            <th>TotalConfirmed</th>
-            <th>newDeaths</th>
-            <th>totalDeaths</th>
-            <th>newRecovered</th>
-            <th>totalRecovered</th>
+            <th>
+                <a href="{{ path('country.index',
+                    queryParams|merge({sortBy: 'name', direction: nextDirection })) }}">
+                    Name
+                </a>
+                <i class="bi bi-sort-down"></i>
+            </th>
+            <th>Confirmed</th>
+            <th>Deaths</th>
+            <th>Recovered</th>
             <th>UpdatedAt</th>
             <th>actions</th>
         </tr>
@@ -45,17 +53,19 @@
                 <td>{{ country.continent | default('--') }}</td>
                 <td>
                     <p class="d-inline-flex">
-                        <img src="{{ asset('flags-malenkie/') }}{{ country.code|lower }}.{{ 'png' }}" alt="flag"/>
+                        <img src="{{ asset('flags-malenkie/') }}{{ country.flag }}" alt="flag"/>
                         &nbsp;<strong>{{ country.code }}</strong></p>
                 </td>
                 <td>{{ country.name }}</td>
-                <td>{{ country.newConfirmed | default('--') }}</td>
-                <td>{{ country.totalConfirmed | default('--') }}</td>
-                <td>{{ country.newDeaths | default('--') }}</td>
-                <td>{{ country.totalDeaths | default('--') }}</td>
-                <td>{{ country.newRecovered | default('--') }}</td>
-                <td>{{ country.totalRecovered | default('--') }}</td>
-
+                <td>{{ country.totalConfirmed | default('--') }}
+                    {% if country.newConfirmed != 0 %}
+                        <small>({{ country.newConfirmed | default('--') }})</small>
+                    {% endif %}
+                </td>
+                <td>{{ country.totalDeaths | default('--') }}<small>({{ country.newDeaths | default('--') }})</small>
+                </td>
+                <td>{{ country.totalRecovered | default('--') }}<small>({{ country.newRecovered | default('--') }}
+                        )</small></td>
                 <td>{{ country.updatedAt ? country.updatedAt|date('Y-m-d H:m:s') : '' }}</td>
                 <td>
                     <a href="{{ path('country.show', {'slug': country.slug}) }}">show</a>
