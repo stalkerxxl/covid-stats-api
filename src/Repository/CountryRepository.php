@@ -44,6 +44,15 @@ class CountryRepository extends ServiceEntityRepository
         }
     }
 
+    public static function newConfirmedCriteria(?int $max): Criteria
+    {
+        $criteria = Criteria::create()
+            ->orderBy(['newConfirmed' => Criteria::DESC]);
+        if ($max)
+            $criteria->setMaxResults($max);
+        return $criteria;
+    }
+
     public function findAllWithSearchPager(?string $search, int $page, int $limit, ?string $continent,
                                            ?string $sortBy, ?string $direction): Pagerfanta
     {
