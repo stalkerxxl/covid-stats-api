@@ -60,6 +60,15 @@ class CountryRepository extends ServiceEntityRepository
         return Pagerfanta::createForCurrentPageWithMaxPerPage(new QueryAdapter($qb), $page, $limit);
     }
 
+    public function getAllContinentList(): array|float|int|string
+    {
+        return $this->createQueryBuilder('c')
+            ->select('c.continent')
+            ->distinct()
+            ->getQuery()
+            ->getSingleColumnResult();
+    }
+
 //    /**
 //     * @return Country[] Returns an array of Country objects
 //     */
