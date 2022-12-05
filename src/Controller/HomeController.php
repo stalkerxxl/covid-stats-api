@@ -6,7 +6,9 @@ use App\Entity\Country;
 use App\Entity\Stat;
 use App\Repository\CountryRepository;
 use App\Repository\StatRepository;
+use App\Service\ChartCreator;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,48 +19,20 @@ use Symfony\UX\Chartjs\Model\Chart;
 class HomeController extends AbstractController
 {
     #[Route('/', name: 'app_home')]
-    public function index(ChartBuilderInterface $chartBuilder, CountryRepository $countryRepository): Response
+    public function index(CountryRepository $countryRepository, ChartCreator $chartCreator): Response
     {
-        $allCountries = $countryRepository->findAll();
-
-        $topByNewConfirmedCriteria = Criteria::create()
-            ->orderBy(['newConfirmed' => Criteria::DESC])
-            ->setMaxResults(10);
-
-        $topByNewConfirmed = (new ArrayCollection($allCountries))
-            ->matching($topByNewConfirmedCriteria)->toArray();
-
-
-        $countryNames = array_map(function (Country $item) {
-            return $item->getName();
-        }, $topByNewConfirmed);
-
-        $newConfirmed = array_map(function (Country $item) {
-            return $item->getNewConfirmed();
-            //return $item->getConfirmedOnPopulation();
-        }, $topByNewConfirmed);
-
-
-        $chart = $chartBuilder->createChart(Chart::TYPE_BAR);
-        $chart->setData([
-            'labels' => $countryNames,
-            'datasets' => [
-                [
-                    'label' => 'Top 10 by New Confirmed',
-                    'backgroundColor' => 'rgb(255, 99, 132)',
-                    'borderColor' => 'rgb(255, 99, 132)',
-                    'data' => $newConfirmed,
-                ],
-            ],
-        ]);
-
-        $chart->setOptions([
-            'indexAxis' => 'y'
-        ]);
+        $allCountries = new ArrayCollection($countryRepository->findAll());
+        $topByNewConfirmedData = $this->topByNewConfirmedCriteria($allCountries);
+        $topByNewConfirmedChart = $chartCreator->createTopByNewConfirmedChart($topByNewConfirmedData);
 
         return $this->render('home/index.html.twig', [
-            'chart' => $chart,
+            'topByNewConfirmedChart' => $topByNewConfirmedChart,
         ]);
+    }
+
+    private function topByNewConfirmedCriteria(ArrayCollection $data): ArrayCollection
+    {
+        return $data->matching(CountryRepository::newConfirmedCriteria(10));
     }
 
 }
