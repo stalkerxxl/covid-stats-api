@@ -416,4 +416,42 @@ class Country
     {
         return strtolower($this->code) . '.png';
     }
+
+    /// Calculate %-properties below
+
+    public function getConfirmedOnPopulation(): float
+    {
+        $percent = ($this->getTotalConfirmed() / $this->getPopulation()) * 100;
+        return round($percent, 2);
+    }
+
+    public function getDeathsOnPopulation(): float
+    {
+        $percent = ($this->getTotalDeaths() / $this->getPopulation()) * 100;
+        return round($percent, 2);
+    }
+
+    public function getRecoveredOnPopulation(): float
+    {
+        $percent = ($this->getTotalRecovered() / $this->getPopulation()) * 100;
+        return round($percent, 2);
+    }
+
+    public function getDeathsOnConfirmed(): float
+    {
+        $percent = ($this->getTotalDeaths() / $this->getTotalConfirmed()) * 100;
+        return round($percent, 2);
+    }
+
+    public function getRecoveredOnConfirmed(): float
+    {
+        $percent = ($this->getTotalRecovered() / $this->getTotalConfirmed()) * 100;
+        return round($percent, 2);
+    }
+
+    public function getRecoveredOnDeaths(): float
+    {
+        $percent = ($this->getTotalRecovered() / $this->getTotalDeaths()) * 100;
+        return round($percent, 2);
+    }
 }

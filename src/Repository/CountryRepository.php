@@ -74,6 +74,14 @@ class CountryRepository extends ServiceEntityRepository
             ->getSingleColumnResult();
     }
 
+    public function findTopByNewConfirmed()
+    {
+        $qb = $this->createQueryBuilder('c');
+        $qb->orderBy('c.newConfirmed', Criteria::DESC)
+            ->setMaxResults(10);
+        return $qb->getQuery()->getResult();
+    }
+
 //    /**
 //     * @return Country[] Returns an array of Country objects
 //     */

@@ -3,12 +3,12 @@
 {% block title %}Hello HomeController!{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
-
-<div class="example-wrapper">
-  {#  {{ render_chart(chart) }}#}
+    <h1>Counties chart</h1>
+<div class="row">
+    <div class="col-6">{{ render_chart(chart) }}</div>
+   {# <div class="col-6">{{ render_chart(chart) }}</div>
+    <div class="col-6">{{ render_chart(chart) }}</div>#}
+    <div class="col"></div>
 </div>
+
 {% endblock %}
