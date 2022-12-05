@@ -44,10 +44,15 @@ class CountryRepository extends ServiceEntityRepository
         }
     }
 
-    public function findAllWithSearchPager(?string $search, int $page, int $limit,
+    public function findAllWithSearchPager(?string $search, int $page, int $limit, ?string $continent,
                                            ?string $sortBy, ?string $direction): Pagerfanta
     {
         $qb = $this->createQueryBuilder('c');
+
+        if ($continent) {
+            $qb->andWhere('c.continent = :continent')
+                ->setParameter('continent', $continent);
+        }
         if ($sortBy && $direction) {
             $qb->orderBy('c.' . $sortBy, $direction);
         } else

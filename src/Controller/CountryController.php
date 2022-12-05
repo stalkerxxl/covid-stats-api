@@ -34,14 +34,15 @@ class CountryController extends AbstractController
     #[Route('/', name: 'country.index', methods: ['GET'])]
     public function index(Request $request, CountryRepository $countryRepository): Response
     {
+        $search = $request->query->get('search');
         $page = $request->query->getInt('page', 1);
         $limit = $request->query->getInt('limit', 10);
-        $search = $request->query->get('search');
+        $continent = $request->query->get('continent');
         $sortBy = $request->query->get('sortBy');
         $direction = $request->query->get('direction');
 
         $continentList = $countryRepository->getAllContinentList();
-        $pager = $countryRepository->findAllWithSearchPager($search, $page, $limit, $sortBy, $direction);
+        $pager = $countryRepository->findAllWithSearchPager($search, $page, $limit, $continent, $sortBy, $direction);
 
         return $this->render('country/index.html.twig', [
             'pager' => $pager,

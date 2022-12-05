@@ -28,11 +28,12 @@
                     {{ queryParams.continent | default('All continents') }}
                 </button>
                 <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="{{ path('country.index',
-                            queryParams|merge({continent: 'all'})) }}">All continents</a></li>
+                    <li><a class="dropdown-item"
+                           href="{{ path('country.index', queryParams|merge({continent: null})) }}">All continents</a>
+                    </li>
                     {% for continent in continentList %}
-                    <li><a class="dropdown-item" href="{{ path('country.index',
-                            queryParams|merge({continent: continent })) }}">{{ continent }}</a></li>
+                        <li><a class="dropdown-item" href="{{ path('country.index',
+                                queryParams|merge({continent: continent })) }}">{{ continent }}</a></li>
                     {% endfor %}
 
                 </ul>
