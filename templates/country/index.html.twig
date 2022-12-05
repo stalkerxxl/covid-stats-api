@@ -24,7 +24,7 @@
         </div>
         <div class="col">
             <div class="dropdown">
-                <button class="btn btn-light dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
                     {{ queryParams.continent | default('All continents') }}
                 </button>
                 <ul class="dropdown-menu">
@@ -40,11 +40,13 @@
             </div>
         </div>
         <div class="col">
-            <form class="d-flex">
-                <input type="text" class="form-control me-2" name="search" value="{{ app.request.query.get('search') }}"
+            <form class="d-flex" action="{{ path('country.index') }}">
+                <input type="search" class="form-control me-2" name="search"
+                       value="{{ app.request.query.get('search') }}"
                        placeholder="search country...">
                 {% if app.request.query.get('search') %}
-                    <a class="btn btn-danger me-2" type="reset" href="{{ path('country.index') }}">X</a>
+                    <a class="btn btn-danger me-2" type="reset"
+                       href="{{ path('country.index') }}">X</a>
                 {% endif %}
                 <button class="btn btn-primary" type="submit">Filter</button>
             </form>
