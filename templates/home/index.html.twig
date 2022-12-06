@@ -12,7 +12,14 @@
         </div>
         {# <div class="col-6">{{ render_chart(chart) }}</div>
     <div class="col-6">{{ render_chart(chart) }}</div> #}
-        <div class="col"></div>
+        <div class="col-6">
+            <turbo-frame id="new_confirmed_chart" src="{{ path('home_top_by_new_confirmed') }}">
+            </turbo-frame>
+        </div>
+        <div class="col-6">
+            <turbo-frame id="new_deaths_chart" src="{{ path('home_top_by_new_deaths') }}">
+            </turbo-frame>
+        </div>
     </div>
 
 {% endblock %}

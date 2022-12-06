@@ -30,8 +30,7 @@ class HomeController extends AbstractController
     #[Route('/', name: 'app_home')]
     public function index(): Response
     {
-        return $this->render('home/index.html.twig', [
-        ]);
+        return $this->render('home/index.html.twig');
     }
 
     #[Route('/top-by-new-confirmed', name: 'home_top_by_new_confirmed')]
