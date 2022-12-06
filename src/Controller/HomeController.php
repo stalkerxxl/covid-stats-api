@@ -63,20 +63,4 @@ class HomeController extends AbstractController
             'topByNewDeathsChart' => $topByNewDeathsChart,
         ]);
     }
-
-    #[Route('/top-by-new-recovered', name: 'home_top_by_new_recovered')]
-    public function topByNewRecovered(): Response
-    {
-        $data = $this->countryRepository
-            ->matching(CountryRepository::newRecoveredCriteria(10))
-            ->getValues();
-
-        $topByNewRecoveredChart = $this->chartCreator
-            ->createTopByNewRecoveredChart((new ArrayCollection($data)));
-
-        return $this->render('home/top-by-new-recovered.html.twig', [
-            'topByNewRecoveredChart' => $topByNewRecoveredChart,
-        ]);
-    }
-
 }
