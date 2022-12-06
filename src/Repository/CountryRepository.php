@@ -54,6 +54,26 @@ class CountryRepository extends ServiceEntityRepository
         return $criteria;
     }
 
+    public static function newDeathsCriteria(?int $max): Criteria
+    {
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->gt('newDeaths', 0))
+            ->orderBy(['newDeaths' => Criteria::DESC]);
+        if ($max)
+            $criteria->setMaxResults($max);
+        return $criteria;
+    }
+
+    public static function newRecoveredCriteria(?int $max): Criteria
+    {
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->gt('newRecovered', 0))
+            ->orderBy(['newRecovered' => Criteria::DESC]);
+        if ($max)
+            $criteria->setMaxResults($max);
+        return $criteria;
+    }
+
     public function findAllWithSearchPager(?string $search, int $page, int $limit, ?string $continent,
                                            ?string $sortBy, ?string $direction): Pagerfanta
     {

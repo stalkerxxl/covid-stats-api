@@ -47,7 +47,36 @@ class HomeController extends AbstractController
         return $this->render('home/top-by-new-confirmed.html.twig', [
             'topByNewConfirmedChart' => $topByNewConfirmedChart,
         ]);
+    }
 
+    #[Route('/top-by-new-deaths', name: 'home_top_by_new_deaths')]
+    public function topByNewDeaths(): Response
+    {
+        $data = $this->countryRepository
+            ->matching(CountryRepository::newDeathsCriteria(10))
+            ->getValues();
+
+        $topByNewDeathsChart = $this->chartCreator
+            ->createTopByNewDeathsChart((new ArrayCollection($data)));
+
+        return $this->render('home/top-by-new-deaths.html.twig', [
+            'topByNewDeathsChart' => $topByNewDeathsChart,
+        ]);
+    }
+
+    #[Route('/top-by-new-recovered', name: 'home_top_by_new_recovered')]
+    public function topByNewRecovered(): Response
+    {
+        $data = $this->countryRepository
+            ->matching(CountryRepository::newRecoveredCriteria(10))
+            ->getValues();
+
+        $topByNewRecoveredChart = $this->chartCreator
+            ->createTopByNewRecoveredChart((new ArrayCollection($data)));
+
+        return $this->render('home/top-by-new-recovered.html.twig', [
+            'topByNewRecoveredChart' => $topByNewRecoveredChart,
+        ]);
     }
 
 }
