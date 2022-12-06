@@ -30,7 +30,7 @@ class ChartCreator
             'labels' => $countryNames->toArray(),
             'datasets' => [
                 [
-                    'label' => 'Top 10 by New Confirmed',
+                    'label' => 'Top 10 by New Confirmed today',
                     'backgroundColor' => 'rgb(255, 99, 132)',
                     'borderColor' => 'rgb(255, 99, 132)',
                     'data' => $newConfirmed->toArray(),
@@ -59,7 +59,7 @@ class ChartCreator
             'labels' => $countryNames->toArray(),
             'datasets' => [
                 [
-                    'label' => 'Top 10 by New Confirmed',
+                    'label' => 'Top 10 by New Deaths today',
                     'backgroundColor' => 'rgb(255, 99, 132)',
                     'borderColor' => 'rgb(255, 99, 132)',
                     'data' => $newDeaths->toArray(),
