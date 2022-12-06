@@ -18,21 +18,36 @@ use Symfony\UX\Chartjs\Model\Chart;
 
 class HomeController extends AbstractController
 {
-    #[Route('/', name: 'app_home')]
-    public function index(CountryRepository $countryRepository, ChartCreator $chartCreator): Response
-    {
-        $allCountries = new ArrayCollection($countryRepository->findAll());
-        $topByNewConfirmedData = $this->topByNewConfirmedCriteria($allCountries);
-        $topByNewConfirmedChart = $chartCreator->createTopByNewConfirmedChart($topByNewConfirmedData);
+    private CountryRepository $countryRepository;
+    private ChartCreator $chartCreator;
 
+    public function __construct(CountryRepository $countryRepository, ChartCreator $chartCreator)
+    {
+        $this->countryRepository = $countryRepository;
+        $this->chartCreator = $chartCreator;
+    }
+
+    #[Route('/', name: 'app_home')]
+    public function index(): Response
+    {
         return $this->render('home/index.html.twig', [
-            'topByNewConfirmedChart' => $topByNewConfirmedChart,
         ]);
     }
 
-    private function topByNewConfirmedCriteria(ArrayCollection $data): ArrayCollection
+    #[Route('/top-by-new-confirmed', name: 'home_top_by_new_confirmed')]
+    public function topByNewConfirmed(): Response
     {
-        return $data->matching(CountryRepository::newConfirmedCriteria(10));
+        $data = $this->countryRepository
+            ->matching(CountryRepository::newConfirmedCriteria(10))
+            ->getValues();
+
+        $topByNewConfirmedChart = $this->chartCreator
+            ->createTopByNewConfirmedChart((new ArrayCollection($data)));
+
+        return $this->render('home/top-by-new-confirmed.html.twig', [
+            'topByNewConfirmedChart' => $topByNewConfirmedChart,
+        ]);
+
     }
 
 }

@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>top-by-new-confirmed chart</h1>
+    <div class="row">
+        <div class="col-12">{{ render_chart(topByNewConfirmedChart) }}</div>
+        {# <div class="col-6">{{ render_chart(chart) }}</div>
+    <div class="col-6">{{ render_chart(chart) }}</div>#}
+        <div class="col"></div>
+    </div>
+{% endblock %}
+
+{% block title %}
+    top-by-new-confirmed
+{% endblock %}
+

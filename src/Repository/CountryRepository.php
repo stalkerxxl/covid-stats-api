@@ -47,6 +47,7 @@ class CountryRepository extends ServiceEntityRepository
     public static function newConfirmedCriteria(?int $max): Criteria
     {
         $criteria = Criteria::create()
+            ->where(Criteria::expr()->gt('newConfirmed', 0))
             ->orderBy(['newConfirmed' => Criteria::DESC]);
         if ($max)
             $criteria->setMaxResults($max);

@@ -14,11 +14,11 @@
                 </button>
                 <ul class="dropdown-menu">
                     <li><a class="dropdown-item" href="{{ path('country.index',
-                            queryParams|merge({limit: 10 })) }}">10</a></li>
+                            queryParams|merge({limit: 10, page: null })) }}">10</a></li>
                     <li><a class="dropdown-item" href="{{ path('country.index',
-                            queryParams|merge({limit: 20 })) }}">20</a></li>
+                            queryParams|merge({limit: 20, page: null })) }}">20</a></li>
                     <li><a class="dropdown-item" href="{{ path('country.index',
-                            queryParams|merge({limit: 50 })) }}">50</a></li>
+                            queryParams|merge({limit: 50, page: null })) }}">50</a></li>
                 </ul>
             </div>
         </div>
@@ -29,11 +29,11 @@
                 </button>
                 <ul class="dropdown-menu">
                     <li><a class="dropdown-item"
-                           href="{{ path('country.index', queryParams|merge({continent: null})) }}">All continents</a>
+                           href="{{ path('country.index', queryParams|merge({continent: null, page: null})) }}">All continents</a>
                     </li>
                     {% for continent in continentList %}
                         <li><a class="dropdown-item" href="{{ path('country.index',
-                                queryParams|merge({continent: continent })) }}">{{ continent }}</a></li>
+                                queryParams|merge({continent: continent, page: null })) }}">{{ continent }}</a></li>
                     {% endfor %}
 
                 </ul>
@@ -60,13 +60,13 @@
             {% set nextDirection = 'desc' %}
         {% endif %}
         <thead>
-        <tr>
+        <tr{# {{ stimulus_controller('sort-table', {sortBy: queryParams.sortBy, direction: queryParams.direction}) }}#}>
             <th>Id</th>
             <th>continent</th>
             <th>code</th>
             <th>
-                <a href="{{ path('country.index',
-                    queryParams|merge({sortBy: 'name', direction: nextDirection })) }}">
+                <a {{ stimulus_target('sort-table', 'name') }}
+                        href="{{ path('country.index',queryParams|merge({sortBy: 'name', direction: nextDirection })) }}">
                     Name
                 </a>
                 <i class="bi bi-sort-down"></i>
