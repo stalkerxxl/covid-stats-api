@@ -3,7 +3,11 @@
 namespace App\Service;
 
 use App\Entity\Country;
+use App\Entity\Stat;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\Criteria;
+use Symfony\UX\Chartjs\Builder\ChartBuilder;
 use Symfony\UX\Chartjs\Builder\ChartBuilderInterface;
 use Symfony\UX\Chartjs\Model\Chart;
 
@@ -72,5 +76,44 @@ class ChartCreator
         ]);
 
         return $topByNewDeathsChart;
+    }
+
+    public function createSingleCountryStatsChart(Collection $allStats): Chart
+    {
+        $criteria = Criteria::create()
+            ->orderBy(['apiTimestamp' => Criteria::ASC]);
+
+        /** @var Collection $data */
+        $data = $allStats->matching($criteria);
+
+        $confirmed = $data->map(function (Stat $item) {
+            return $item->getConfirmed();
+        });
+
+        $date = $data->map(function (Stat $item) {
+            return $item->getApiTimestamp()->format('Y-m');
+        });
+
+        $chart = (new ChartBuilder())->createChart(Chart::TYPE_LINE);
+        $chart->setData([
+            'labels' => $date->toArray(),
+            'datasets' => [
+                [
+                    'label' => 'My First dataset',
+                    'backgroundColor' => 'rgb(255, 99, 132)',
+                    'data' => $confirmed->toArray(),
+                ]
+            ],
+        ]);
+
+        $chart->setOptions([
+            'scales' => [
+                'y' => [
+                    'suggestedMin' => 0,
+                ],
+            ],
+        ]);
+
+        return $chart;
     }
 }
