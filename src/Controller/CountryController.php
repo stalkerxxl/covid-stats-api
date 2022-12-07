@@ -12,6 +12,7 @@ use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Pagerfanta\Adapter\ArrayAdapter;
+use Pagerfanta\Doctrine\Collections\CollectionAdapter;
 use Pagerfanta\Pagerfanta;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -51,28 +52,28 @@ class CountryController extends AbstractController
     }
 
     #[Route('/{slug}', name: 'country.show', methods: ['GET'])]
-    public function show(Country $country, Request $request, PaginatorInterface $paginator): Response
+    public function show(Country $country, Request $request): Response
     {
-        $allStats = $country->getStats()->toArray();
+        $allStats = $country->getStats();
 
         $page = $request->query->getInt('page', 1);
-        $sort = $request->query->get('sort');
+        $sortBy = $request->query->get('sortBy');
         $direction = $request->query->get('direction');
 
-        if ($sort && $direction) {
+        if ($sortBy && $direction) {
             $criteria = Criteria::create()
-                ->orderBy([$sort => $direction]);
-            $allStats = (new ArrayCollection($allStats))->matching($criteria);
+                ->orderBy([$sortBy => $direction]);
+            $allStats = $allStats->matching($criteria);
         }
-        $paginator = $paginator->paginate($allStats, $page);
+        $pager = Pagerfanta::createForCurrentPageWithMaxPerPage(new CollectionAdapter($allStats), $page, 10);
+
 
         $chart = $this->createChat($country);
 
         return $this->render('country/show.html.twig', [
             'country' => $country,
             'chart' => $chart,
-            //'allStats' => $allStats,
-            'paginator' => $paginator
+            'pager' => $pager
         ]);
     }
 
@@ -85,7 +86,7 @@ class CountryController extends AbstractController
             return $item->getConfirmed();
         }, $data);
         $date = array_map(function (Stat $item) {
-            return $item->getApiTimestamp()->format('Y');
+            return $item->getApiTimestamp()->format('Y-m');
         }, $data);
 
         $chart = (new ChartBuilder())->createChart(Chart::TYPE_LINE);
@@ -111,23 +112,6 @@ class CountryController extends AbstractController
         return $chart;
     }
 
-    #[Route('/{id}/edit', name: 'country_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Country $country, CountryRepository $countryRepository): Response
-    {
-        $form = $this->createForm(CountryType::class, $country);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $countryRepository->save($country, true);
-
-            return $this->redirectToRoute('country.index', [], Response::HTTP_SEE_OTHER);
-        }
-
-        return $this->renderForm('country/edit.html.twig', [
-            'country' => $country,
-            'form' => $form->createView(),
-        ]);
-    }
 
     #[Route('/{id}', name: 'country_delete', methods: ['POST'])]
     public function delete(Request $request, Country $country, CountryRepository $countryRepository): Response

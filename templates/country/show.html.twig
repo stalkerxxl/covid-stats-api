@@ -38,35 +38,27 @@
             <table class="table">
                 <thead>
                 <tr>
-                    <th{% if paginator.isSorted('ApiTimestamp') %} class="sorted"{% endif %}>
-                        {{ knp_pagination_sortable(paginator, 'Date', 'apiTimestamp') }}
-                    </th>
-                    <th{% if paginator.isSorted('Confirmed') %} class="sorted"{% endif %}>
-                        {{ knp_pagination_sortable(paginator, 'Confirmed', 'confirmed') }}
-                    </th>
-                    <th{% if paginator.isSorted('Deaths') %} class="sorted"{% endif %}>
-                        {{ knp_pagination_sortable(paginator, 'Deaths', 'deaths') }}
-                    </th>
-                    <th{% if paginator.isSorted('Recovered') %} class="sorted"{% endif %}>
-                        {{ knp_pagination_sortable(paginator, 'Recovered', 'recovered') }}
-                    </th>
+                    <th>Date</th>
+                    <th>Confirmed</th>
+                    <th>Deaths</th>
+                    <th>Recovered</th>
                 </tr>
                 </thead>
                 <tbody>
-                {% for stat in paginator %}
-                <tr>
-                    <td>{{ stat.apiTimestamp|date}}</td>
-                    <td>{{ stat.confirmed | default('--') }}</td>
-                    <td>{{ stat.deaths | default('--') }}</td>
-                    <td>{{ stat.recovered | default('--') }}</td>
-                    <td></td>
-                </tr>
+                {% for stat in pager %}
+                    <tr>
+                        <td>{{ stat.apiTimestamp|date }}</td>
+                        <td>{{ stat.confirmed | default('--') }}</td>
+                        <td>{{ stat.deaths | default('--') }}</td>
+                        <td>{{ stat.recovered | default('--') }}</td>
+                        <td></td>
+                    </tr>
                 {% endfor %}
                 </tbody>
             </table>
             {# display navigation #}
             <div class="navigation float-end">
-                {{ knp_pagination_render(paginator) }}
+                {{ pagerfanta(pager, {'omitFirstPage': true }) }}
             </div>
         </div>
         <div class="tab-pane" id="messages" role="tabpanel" tabindex="0">...</div>
@@ -75,8 +67,6 @@
 
 
     <a href="{{ path('country.index') }}">back to list</a>
-
-    <a href="{{ path('country_edit', {'id': country.id}) }}">edit</a>
 
     {{ include('country/_delete_form.html.twig') }}
 {% endblock %}

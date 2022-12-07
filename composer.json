@@ -12,7 +12,6 @@
         "doctrine/doctrine-fixtures-bundle": "^3.4",
         "doctrine/doctrine-migrations-bundle": "^3.2",
         "doctrine/orm": "^2.13",
-        "knplabs/knp-paginator-bundle": "^6.0",
         "pagerfanta/doctrine-collections-adapter": "^3.6",
         "pagerfanta/doctrine-orm-adapter": "^3.6",
         "pagerfanta/twig": "^3.6",
