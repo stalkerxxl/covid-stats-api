@@ -3,23 +3,45 @@
 {% block title %}Hello HomeController!{% endblock %}
 
 {% block body %}
-    <h1>World Chart</h1>
-    <div class="row">
-        <div class="col-12">
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias amet aut dolorum eligendi et eveniet ex fuga
-            incidunt inventore, laborum odit perspiciatis praesentium, quibusdam reiciendis repellendus sunt tenetur
-            unde voluptate!
-        </div>
-        {# <div class="col-6">{{ render_chart(chart) }}</div>
-    <div class="col-6">{{ render_chart(chart) }}</div> #}
-        <div class="col-6">
-            <turbo-frame id="new_confirmed_chart" src="{{ path('home_top_by_new_confirmed') }}">
-            </turbo-frame>
-        </div>
-        <div class="col-6">
-            <turbo-frame id="new_deaths_chart" src="{{ path('home_top_by_new_deaths') }}">
-            </turbo-frame>
+    <div class="container">
+        <div class="columns is-multiline">
+            <div class="column is-8">
+                <section class="hero is-primary is-medium">
+                    <div class="hero-body">
+                        <p class="title">
+                            Wordl Statistic Chart
+                        </p>
+                        <p class="subtitle">
+                            coming soon....
+                        </p>
+                    </div>
+                </section>
+            </div>
+            <div class="column is-4">
+                <h1 class="title">Title</h1>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias amet aut dolorum eligendi et eveniet
+                    ex
+                    fuga
+                    incidunt inventore, laborum odit perspiciatis praesentium, quibusdam reiciendis repellendus sunt
+                    tenetur
+                    unde voluptate! Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias amet aut dolorum eligendi et eveniet
+                    ex
+                    fuga
+                    incidunt inventore, laborum odit perspiciatis praesentium, quibusdam reiciendis repellendus sunt
+                    tenetur
+                    unde voluptate!</p>
+                <a href="{{ path('country.index') }}" class="button">Detail Statistic</a>
+            </div>
+            <div class="column is-6">
+                <turbo-frame id="new_confirmed_chart" src="{{ path('home_top_by_new_confirmed') }}">
+                </turbo-frame>
+            </div>
+            <div class="column is-6">
+                <turbo-frame id="new_deaths_chart" src="{{ path('home_top_by_new_deaths') }}">
+                </turbo-frame>
+            </div>
         </div>
     </div>
 
 {% endblock %}
+

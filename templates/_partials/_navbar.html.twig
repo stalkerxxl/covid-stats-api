@@ -1,31 +1,25 @@
-<nav class="navbar navbar-light bg-light navbar-expand-lg mb-3" data-turbo="true">
+<nav class="navbar is-fixed-top is-dark" role="navigation" aria-label="main navigation">
     <div class="container">
-        <a class="navbar-brand" href="/">BRAND</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor02">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarColor02">
-            <ul class="navbar-nav me-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ path('country.index') }}">Country</a>
-                </li>
+        <div class="navbar-brand">
+            <a class="navbar-item" href="/">
+                <p class="title is-4 has-text-white">Home</p>
+            </a>
+            <a role="button" class="navbar-burger" data-target="navbarBasicExample">
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+            </a>
+        </div>
 
-                {#   <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button">Dropdown</a>
-                    <div class="dropdown-menu">
-                        <a class="dropdown-item" href="#">Action</a>
-                        <a class="dropdown-item" href="#">Another action</a>
-                        <a class="dropdown-item" href="#">Something else here</a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="#">Separated link</a>
-                    </div>
-                </li> #}
-            </ul>
-            {# <form class="d-flex">
-                <input class="form-control me-sm-2" type="text" placeholder="Search">
-                <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
-            </form> #}
-            <div class="d-flex ms-auto small bg-warning text-white px-1">Last update: {{ random(50, 100) }} minutes ago </div>
+        <div id="navbarBasicExample" class="navbar-menu">
+            <div class="navbar-start">
+            </div>
+
+            <div class="navbar-end">
+                <div class="navbar-item has-text-danger has-text-weight-bold">
+                    Last update: {{ random(50, 100) }} minutes ago
+                </div>
+            </div>
         </div>
     </div>
 </nav>

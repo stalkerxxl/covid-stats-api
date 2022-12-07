@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-turbo="false">
+<html lang="en" data-turbo="false" class="has-navbar-fixed-top">
     <head>
         <meta charset="UTF-8">
         <title>{% block title %}Welcome!{% endblock %}</title>
@@ -16,9 +16,9 @@
     <body>
     {% include '_partials/_navbar.html.twig' %}
 
-    <div class="container" data-turbo="true">
+    <section class="section" data-turbo="true">
         {% block body %}{% endblock %}
-    </div>
+    </section>
 
     </body>
 </html>

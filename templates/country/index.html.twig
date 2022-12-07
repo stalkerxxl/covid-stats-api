@@ -62,7 +62,7 @@
         {% endif %}
         <thead>
         <tr{# {{ stimulus_controller('sort-table', {sortBy: queryParams.sortBy, direction: queryParams.direction}) }} #}>
-            <th>Id</th>
+            <th>#</th>
             <th>
                 <a href="{{ path('country.index',queryParams|merge({sortBy: 'continent', direction: nextDirection })) }}">
                     Continent</a></th>
@@ -100,7 +100,7 @@
                         <small class="text-success fw-bold">...+{{ country.newConfirmed | default('--') }}</small>
                     {% endif %}
                 </td>
-                <td>{{ country.totalDeaths | default('--') }}<small>({{ country.newDeaths | default('--') }})</small>
+                <td>{{ country.totalDeaths | default('--') }}<small class="text-danger fw-bold ms-1">...+99</small>
                 </td>
                 <td>
                     <a href="{{ path('country.show', {'slug': country.slug}) }}">show</a>
