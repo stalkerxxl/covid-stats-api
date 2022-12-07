@@ -37,10 +37,9 @@ class CountryController extends AbstractController
     }
 
     #[Route('/{slug}', name: 'country.show', methods: ['GET'])]
-    public function show(Country $country, Request $request, ChartCreator $chartCreator): Response
+    public function show(Country $country, Request $request): Response
     {
         $allStats = $country->getStats();
-        //$countryChart = $chartCreator->createSingleCountryStatsChart($allStats);
 
         $page = $request->query->getInt('page', 1);
         $sortBy = $request->query->get('sortBy', 'apiTimestamp');
@@ -53,9 +52,14 @@ class CountryController extends AbstractController
         }
         $pager = Pagerfanta::createForCurrentPageWithMaxPerPage(new CollectionAdapter($allStats), $page, 10);
 
+        if ($request->headers->get('Turbo-Frame'))
+            return $this->render('country/single_country_table.html.twig', [
+                'country' => $country,
+                'pager' => $pager
+            ]);
+
         return $this->render('country/show.html.twig', [
             'country' => $country,
-            //'countryChart' => $countryChart,
             'pager' => $pager
         ]);
     }

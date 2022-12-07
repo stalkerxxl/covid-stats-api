@@ -1,0 +1,52 @@
+{% set queryParams = app.request.query.all %}
+    {% if app.request.query.get('direction') == 'desc' or app.request.query.get('direction') == null %}
+        {% set nextDirection = 'asc' %}
+    {% else %}
+        {% set nextDirection = 'desc' %}
+    {% endif %}
+<turbo-frame id="single_country_table">
+    <table class="table table-hover table-striped table-sm">
+        <thead>
+        <tr>
+            <th>
+                <a href="{{ path('country.show',
+                    {slug: country.slug}
+                    |merge(queryParams|merge({sortBy: 'apiTimestamp', direction: nextDirection }))) }}">
+                    Date
+                </a>
+            </th>
+            <th>
+                <a href="{{ path('country.show',
+                    {slug: country.slug}
+                    |merge(queryParams|merge({sortBy: 'confirmed', direction: nextDirection }))) }}">
+                    Confirmed
+                </a>
+            </th>
+            <th><a href="{{ path('country.show',
+                    {slug: country.slug}
+                    |merge(queryParams|merge({sortBy: 'deaths', direction: nextDirection }))) }}">
+                    Deaths
+                </a></th>
+            <th><a href="{{ path('country.show',
+                    {slug: country.slug}
+                    |merge(queryParams|merge({sortBy: 'recovered', direction: nextDirection }))) }}">
+                    Recovered
+                </a></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for stat in pager %}
+            <tr>
+                <td>{{ stat.apiTimestamp|date }}</td>
+                <td>{{ stat.confirmed | default('--') }}</td>
+                <td>{{ stat.deaths | default('--') }}</td>
+                <td>{{ stat.recovered | default('--') }}</td>
+                <td></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <div class="float-end">
+        {{ pagerfanta(pager, {'omitFirstPage': true }) }}
+    </div>
+</turbo-frame>

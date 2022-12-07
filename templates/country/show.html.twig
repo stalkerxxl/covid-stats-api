@@ -1,14 +1,8 @@
 {% extends 'base.html.twig' %}
-{% set queryParams = app.request.query.all %}
- {% if app.request.query.get('direction') == 'desc' or app.request.query.get('direction') == null %}
-     {% set nextDirection = 'asc' %}
- {% else %}
-     {% set nextDirection = 'desc' %}
- {% endif %}
 {% block title %}Country{% endblock %}
-
 {% block body %}
-    <h1>{{ country.name }}<img class="ms-3" src="{{ asset('flags-malenkie/') }}{{ country.flag }}" alt="flag"/></h1>
+    <h1>{{ country.name }}<img class="ms-3" src="{{ asset('flags-malenkie/') }}{{ country.flag }}" alt="flag"/>
+    </h1>
     <!-- Nav tabs -->
     <div class="row">
         <div class="col-8">
@@ -21,52 +15,11 @@
             </turbo-frame>
         </div>
         <div class="col-4">
-            <table class="table table-hover table-striped table-sm">
-                <thead>
-                <tr>
-                    <th>
-                        <a href="{{ path('country.show',
-                            {slug: country.slug}
-                            |merge(queryParams|merge({sortBy: 'apiTimestamp', direction: nextDirection }))) }}">
-                            Date
-                        </a>
-                    </th>
-                    <th>
-                        <a href="{{ path('country.show',
-                            {slug: country.slug}
-                            |merge(queryParams|merge({sortBy: 'confirmed', direction: nextDirection }))) }}">
-                            Confirmed
-                        </a>
-                    </th>
-                    <th><a href="{{ path('country.show',
-                            {slug: country.slug}
-                            |merge(queryParams|merge({sortBy: 'deaths', direction: nextDirection }))) }}">
-                            Deaths
-                        </a></th>
-                    <th><a href="{{ path('country.show',
-                            {slug: country.slug}
-                            |merge(queryParams|merge({sortBy: 'recovered', direction: nextDirection }))) }}">
-                            Recovered
-                        </a></th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for stat in pager %}
-                    <tr>
-                        <td>{{ stat.apiTimestamp|date }}</td>
-                        <td>{{ stat.confirmed | default('--') }}</td>
-                        <td>{{ stat.deaths | default('--') }}</td>
-                        <td>{{ stat.recovered | default('--') }}</td>
-                        <td></td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-            {# display navigation #}
-            <div class="float-end">
-                {{ pagerfanta(pager, {'omitFirstPage': true }) }}
-            </div>
+            <turbo-frame id="single_country_table" data-turbo-action="advance">
+                {{ include('country/single_country_table.html.twig', with_context = true) }}
+            </turbo-frame>
         </div>
+
         <div class="col">
             <div class="ms-auto me-auto"><p><a href="{{ path('country.index') }}">back to list</a></p></div>
         </div>
