@@ -1,9 +1,14 @@
 {% extends 'base.html.twig' %}
-
+{% set queryParams = app.request.query.all %}
+ {% if app.request.query.get('direction') == 'desc' or app.request.query.get('direction') == null %}
+     {% set nextDirection = 'asc' %}
+ {% else %}
+     {% set nextDirection = 'desc' %}
+ {% endif %}
 {% block title %}Country{% endblock %}
 
 {% block body %}
-    <h1>{{ country.name }}</h1>
+    <h1>{{ country.name }}<img class="ms-3" src="{{ asset('flags-malenkie/') }}{{ country.flag }}" alt="flag"/></h1>
     <!-- Nav tabs -->
     <div class="row">
         <div class="col justify-content-end">
@@ -11,19 +16,19 @@
                 <li class="nav-item" role="presentation">
                     <button class="nav-link" id="home-tab" data-bs-toggle="tab" data-bs-target="#home"
                             type="button"
-                            role="tab">График
+                            role="tab">Chart
                     </button>
                 </li>
                 <li class="nav-item" role="presentation">
                     <button class="nav-link active" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile"
                             type="button"
-                            role="tab">Таблица
+                            role="tab">Data by date
                     </button>
                 </li>
                 <li class="nav-item" role="presentation">
                     <button class="nav-link" id="messages-tab" data-bs-toggle="tab" data-bs-target="#messages"
                             type="button"
-                            role="tab">О стране
+                            role="tab">About country
                     </button>
                 </li>
             </ul>
@@ -35,13 +40,33 @@
             {{ render_chart(countryChart) }}
         </div>
         <div class="tab-pane active" id="profile" role="tabpanel" tabindex="0">
-            <table class="table">
+            <table class="table table-hover table-striped table-sm">
                 <thead>
                 <tr>
-                    <th>Date</th>
-                    <th>Confirmed</th>
-                    <th>Deaths</th>
-                    <th>Recovered</th>
+                    <th>
+                        <a href="{{ path('country.show',
+                            {slug: country.slug}
+                            |merge(queryParams|merge({sortBy: 'apiTimestamp', direction: nextDirection }))) }}">
+                            Date
+                        </a>
+                    </th>
+                    <th>
+                        <a href="{{ path('country.show',
+                            {slug: country.slug}
+                            |merge(queryParams|merge({sortBy: 'confirmed', direction: nextDirection }))) }}">
+                            Confirmed
+                        </a>
+                    </th>
+                    <th><a href="{{ path('country.show',
+                            {slug: country.slug}
+                            |merge(queryParams|merge({sortBy: 'deaths', direction: nextDirection }))) }}">
+                            Deaths
+                        </a></th>
+                    <th><a href="{{ path('country.show',
+                            {slug: country.slug}
+                            |merge(queryParams|merge({sortBy: 'recovered', direction: nextDirection }))) }}">
+                            Recovered
+                        </a></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -63,10 +88,5 @@
         </div>
         <div class="tab-pane" id="messages" role="tabpanel" tabindex="0">...</div>
     </div>
-
-
-
     <a href="{{ path('country.index') }}">back to list</a>
-
-    {{ include('country/_delete_form.html.twig') }}
 {% endblock %}
