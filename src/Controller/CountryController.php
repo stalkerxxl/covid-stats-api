@@ -40,7 +40,7 @@ class CountryController extends AbstractController
     public function show(Country $country, Request $request, ChartCreator $chartCreator): Response
     {
         $allStats = $country->getStats();
-        $countryChart = $chartCreator->createSingleCountryStatsChart($allStats);
+        //$countryChart = $chartCreator->createSingleCountryStatsChart($allStats);
 
         $page = $request->query->getInt('page', 1);
         $sortBy = $request->query->get('sortBy', 'apiTimestamp');
@@ -55,8 +55,19 @@ class CountryController extends AbstractController
 
         return $this->render('country/show.html.twig', [
             'country' => $country,
-            'countryChart' => $countryChart,
+            //'countryChart' => $countryChart,
             'pager' => $pager
+        ]);
+    }
+
+    #[Route('/chart/{slug}', name: 'country.chart', methods: ['GET'])]
+    public function chart(Country $country, ChartCreator $chartCreator): Response
+    {
+        $allStats = $country->getStats();
+        $countryChart = $chartCreator->createSingleCountryStatsChart($allStats);
+
+        return $this->render('country/chart.html.twig', [
+            'countryChart' => $countryChart
         ]);
     }
 

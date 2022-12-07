@@ -11,35 +11,16 @@
     <h1>{{ country.name }}<img class="ms-3" src="{{ asset('flags-malenkie/') }}{{ country.flag }}" alt="flag"/></h1>
     <!-- Nav tabs -->
     <div class="row">
-        <div class="col justify-content-end">
-            <ul class="nav nav-tabs float-end" id="myTab" role="tablist">
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="home-tab" data-bs-toggle="tab" data-bs-target="#home"
-                            type="button"
-                            role="tab">Chart
-                    </button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link active" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile"
-                            type="button"
-                            role="tab">Data by date
-                    </button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="messages-tab" data-bs-toggle="tab" data-bs-target="#messages"
-                            type="button"
-                            role="tab">About country
-                    </button>
-                </li>
-            </ul>
+        <div class="col-8">
+            <turbo-frame id="country_chart" src="{{ path('country.chart', {slug: country.slug}) }}">
+                <div class="text-center">
+                    <div class="spinner-border" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+            </turbo-frame>
         </div>
-    </div>
-    <!-- Tab panes -->
-    <div class="tab-content">
-        <div class="tab-pane" id="home" role="tabpanel" tabindex="0">
-            {{ render_chart(countryChart) }}
-        </div>
-        <div class="tab-pane active" id="profile" role="tabpanel" tabindex="0">
+        <div class="col-4">
             <table class="table table-hover table-striped table-sm">
                 <thead>
                 <tr>
@@ -82,11 +63,12 @@
                 </tbody>
             </table>
             {# display navigation #}
-            <div class="navigation float-end">
+            <div class="float-end">
                 {{ pagerfanta(pager, {'omitFirstPage': true }) }}
             </div>
         </div>
-        <div class="tab-pane" id="messages" role="tabpanel" tabindex="0">...</div>
+        <div class="col">
+            <div class="ms-auto me-auto"><p><a href="{{ path('country.index') }}">back to list</a></p></div>
+        </div>
     </div>
-    <a href="{{ path('country.index') }}">back to list</a>
 {% endblock %}
