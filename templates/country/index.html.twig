@@ -29,7 +29,8 @@
                 </button>
                 <ul class="dropdown-menu">
                     <li><a class="dropdown-item"
-                           href="{{ path('country.index', queryParams|merge({continent: null, page: null})) }}">All continents</a>
+                           href="{{ path('country.index', queryParams|merge({continent: null, page: null})) }}">All
+                            continents</a>
                     </li>
                     {% for continent in continentList %}
                         <li><a class="dropdown-item" href="{{ path('country.index',
@@ -60,21 +61,26 @@
             {% set nextDirection = 'desc' %}
         {% endif %}
         <thead>
-        <tr{# {{ stimulus_controller('sort-table', {sortBy: queryParams.sortBy, direction: queryParams.direction}) }}#}>
+        <tr{# {{ stimulus_controller('sort-table', {sortBy: queryParams.sortBy, direction: queryParams.direction}) }} #}>
             <th>Id</th>
-            <th>continent</th>
-            <th>code</th>
             <th>
-                <a {{ stimulus_target('sort-table', 'name') }}
-                        href="{{ path('country.index',queryParams|merge({sortBy: 'name', direction: nextDirection })) }}">
-                    Name
-                </a>
-                <i class="bi bi-sort-down"></i>
+                <a href="{{ path('country.index',queryParams|merge({sortBy: 'continent', direction: nextDirection })) }}">
+                    Continent</a></th>
+            <th>
+                <a href="{{ path('country.index',queryParams|merge({sortBy: 'code', direction: nextDirection })) }}">
+                    Code</a></th>
+            <th>
+                <a href="{{ path('country.index',queryParams|merge({sortBy: 'name', direction: nextDirection })) }}">
+                    Name</a>
             </th>
-            <th>Confirmed</th>
-            <th>Deaths</th>
-            <th>Recovered</th>
-            <th>UpdatedAt</th>
+            <th>
+                <a href="{{ path('country.index',queryParams|merge({sortBy: 'totalConfirmed', direction: nextDirection })) }}">
+                    Confirmed</a>
+            </th>
+            <th>
+                <a href="{{ path('country.index',queryParams|merge({sortBy: 'totalDeaths', direction: nextDirection })) }}">
+                    Deaths</a></th>
+
             <th>actions</th>
         </tr>
         </thead>
@@ -96,16 +102,13 @@
                 </td>
                 <td>{{ country.totalDeaths | default('--') }}<small>({{ country.newDeaths | default('--') }})</small>
                 </td>
-                <td>{{ country.totalRecovered | default('--') }}<small>({{ country.newRecovered | default('--') }}
-                        )</small></td>
-                <td>{{ country.updatedAt ? country.updatedAt|date('Y-m-d H:m:s') : '' }}</td>
                 <td>
                     <a href="{{ path('country.show', {'slug': country.slug}) }}">show</a>
                 </td>
             </tr>
         {% else %}
             <tr>
-                <td colspan="7">no records found</td>
+                <td colspan="7"><div class="text-center text-capitalize">no records found</div></td>
             </tr>
         {% endfor %}
         </tbody>
