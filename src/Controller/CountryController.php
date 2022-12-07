@@ -43,7 +43,7 @@ class CountryController extends AbstractController
         $countryChart = $chartCreator->createSingleCountryStatsChart($allStats);
 
         $page = $request->query->getInt('page', 1);
-        $sortBy = $request->query->get('sortBy');
+        $sortBy = $request->query->get('sortBy', 'apiTimestamp');
         $direction = $request->query->get('direction');
 
         if ($sortBy && $direction) {
