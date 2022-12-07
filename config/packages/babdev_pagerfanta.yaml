@@ -1,3 +1,3 @@
 babdev_pagerfanta:
     default_view: twig
-    default_twig_template: '_partials/_bootstrap5_pagination.html.twig'
+    default_twig_template: '_partials/_bulma_pagination.html.twig'

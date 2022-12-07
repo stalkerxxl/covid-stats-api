@@ -1,27 +1,81 @@
 {% extends 'base.html.twig' %}
 {% block title %}Country{% endblock %}
 {% block body %}
-    <h1>{{ country.name }}<img class="ms-3" src="{{ asset('flags-malenkie/') }}{{ country.flag }}" alt="flag"/>
-    </h1>
-    <!-- Nav tabs -->
-    <div class="row">
-        <div class="col-8">
-            <turbo-frame id="country_chart" src="{{ path('country.chart', {slug: country.slug}) }}">
-                <div class="text-center">
-                    <div class="spinner-border" role="status">
-                        <span class="visually-hidden">Loading...</span>
-                    </div>
-                </div>
-            </turbo-frame>
-        </div>
-        <div class="col-4">
-            <turbo-frame id="single_country_table" data-turbo-action="advance">
-                {{ include('country/single_country_table.html.twig', with_context = true) }}
-            </turbo-frame>
-        </div>
+    <div class="container">
+        <h1 class="title">{{ country.name }}<img class="ms-3" src="{{ asset('flags-malenkie/') }}{{ country.flag }}"
+                                                 alt="flag"/>
+        </h1>
 
-        <div class="col">
-            <div class="ms-auto me-auto"><p><a href="{{ path('country.index') }}">back to list</a></p></div>
+        <nav class="level is-mobile">
+            <div class="level-item has-text-centered">
+                <div>
+                    <p class="heading">Tweets</p>
+                    <p class="title">3,456</p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered">
+                <div>
+                    <p class="heading">Following</p>
+                    <p class="title">123</p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered">
+                <div>
+                    <p class="heading">Followers</p>
+                    <p class="title">456K</p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered">
+                <div>
+                    <p class="heading">Likes</p>
+                    <p class="title">789</p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered">
+                <div>
+                    <p class="heading">Tweets</p>
+                    <p class="title">3,456</p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered">
+                <div>
+                    <p class="heading">Following</p>
+                    <p class="title">123</p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered">
+                <div>
+                    <p class="heading">Followers</p>
+                    <p class="title">456K</p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered">
+                <div>
+                    <p class="heading">Likes</p>
+                    <p class="title">789</p>
+                </div>
+            </div>
+        </nav>
+
+        <div class="columns is-multiline">
+            <div class="column is-7">
+                <turbo-frame id="country_chart" src="{{ path('country.chart', {slug: country.slug}) }}">
+                    <div class="text-center">
+                        <div class="spinner-border" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+                </turbo-frame>
+            </div>
+            <div class="column is-5">
+                <turbo-frame id="single_country_table" data-turbo-action="advance">
+                    {{ include('country/single_country_table.html.twig', with_context = true) }}
+                </turbo-frame>
+            </div>
+
+
+                <div class="ms-auto me-auto"><p><a href="{{ path('country.index') }}">back to list</a></p></div>
+
         </div>
     </div>
 {% endblock %}

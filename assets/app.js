@@ -6,7 +6,7 @@
  */
 
 // any CSS you import will output into a single css file (app.scss in this case)
-import 'bulmaswatch/default/bulmaswatch.min.css'
+import 'bulma/css/bulma.css';
 import './styles/app.scss';
 
 // start the Stimulus application
