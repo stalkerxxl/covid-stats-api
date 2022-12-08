@@ -5,51 +5,69 @@
 {% block body %}
     <div class="container">
         <h1 class="title">Title</h1>
-        <form method="get" action="{{ path('country.index',
-            queryParams) }}">
-            <div class="field-body is-justify-content-space-between">
-                <div class="field is-narrow">
-                    <div class="select">
-                        <select name="limit" onchange="form.submit()">
-                            <option value="{{ app.request.query.get('limit')|default(10) }}" selected
-                                    hidden>{{ app.request.query.get('limit')|default(10) }}</option>
-                            <option value="10">10</option>
-                            <option value="25">25</option>
-                            <option value="50">50</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="field is-narrow is-grouped">
-                    <p class="control">
-                        <a class="button {% if app.request.query.has('continent') == false %}has-background-light{% endif %}"
-                           href="{{ path('country.index') }}">
-                            All
-                        </a>
-                    </p>
-                    {% for continent in continentList %}
-                        <p class="control">
-                            <a class="button {% if app.request.query.get('continent') == continent %}
-                            has-background-light{% endif %}"
-                               href="{{ path('country.index',
-                                   queryParams|merge({continent: continent, page: null, limit: app.request.query.get('limit') })) }}">
-                                {{ continent }}
-                            </a>
-                        </p>
-                    {% endfor %}
-                </div>
-                <div class="field is-narrow has-addons">
-                    <div class="control">
-                        <input class="input" name="search" type="search" placeholder="Search by country...">
-                    </div>
-                    <div class="control">
-                        <button type="submit" class="button is-info">
-                            Search
+        <div class="field-body is-justify-content-space-between">
+            <div class="field is-narrow">
+                <div class="dropdown is-hoverable">
+                    <div class="dropdown-trigger">
+                        <button class="button" aria-haspopup="true" aria-controls="dropdown-menu">
+                            <span>{{ queryParams.limit|default(10) }}</span>
+                            <span class="icon is-small">
+        <i class="fas fa-angle-down" aria-hidden="true"></i>
+      </span>
                         </button>
+                    </div>
+                    <div class="dropdown-menu" style="min-width: 3rem" id="dropdown-menu" role="menu">
+                        <div class="dropdown-content">
+                            <a class="dropdown-item" href="{{ path('country.index',
+                                queryParams|merge({page: null, limit: 10 })) }}">
+                                10
+                            </a>
+                            <a class="dropdown-item" href="{{ path('country.index',
+                                queryParams|merge({page: null, limit: 25 })) }}">
+                                25
+                            </a>
+                            <a class="dropdown-item" href="{{ path('country.index',
+                                queryParams|merge({page: null, limit: 50 })) }}">
+                                50
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
-        </form>
+
+            <div class="field is-narrow is-grouped">
+                <p class="control">
+                    <a class="button {% if app.request.query.has('continent') == false %}has-background-light{% endif %}"
+                       href="{{ path('country.index') }}">
+                        All
+                    </a>
+                </p>
+                {% for continent in continentList %}
+                    <p class="control">
+                        <a class="button {% if app.request.query.get('continent') == continent %}
+                            has-background-light{% endif %}"
+                           href="{{ path('country.index',
+                               queryParams|merge({continent: continent, page: null, limit: app.request.query.get('limit') })) }}">
+                            {{ continent }}
+                        </a>
+                    </p>
+                {% endfor %}
+            </div>
+
+            <form class="field is-narrow has-addons is-horizontal">
+                <div class="control">
+                    <input class="input" name="search" type="search"
+                           placeholder="Search by country..." value="{{ queryParams.search|default(null) }}">
+                </div>
+                <div class="control">
+                    <button type="submit" class="button is-info">
+                        Search
+                    </button>
+                </div>
+
+            </form>
+
+        </div>
         <table class="table is-striped is-hoverable is-fullwidth">
             {% if app.request.query.get('direction') == 'desc' %}
                 {% set nextDirection = 'asc' %}
