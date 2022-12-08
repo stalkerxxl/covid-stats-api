@@ -5,6 +5,48 @@
 {% block body %}
     <div class="container">
         <h1 class="title">Title</h1>
+        <form class="field is-horizontal" method="get" data-turbo="true">
+            <div class="field-body is-justify-content-space-between">
+                <div class="field is-narrow">
+                    <div class="select">
+                        <select name="limit" onchange="form.submit()">
+                            <option value="{{ app.request.query.get('limit')|default(10) }}" selected
+                                    hidden>{{ app.request.query.get('limit')|default(10) }}</option>
+                            <option value="10">10</option>
+                            <option value="20">20</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="field is-narrow is-grouped">
+                    <p class="control">
+                        <a class="button {% if app.request.query.has('continent') == false %}has-background-light{% endif %}"
+                           href="{{ path('country.index') }}">
+                            All
+                        </a>
+                    </p>
+                    {% for continent in continentList %}
+                        <p class="control">
+                            <a class="button {% if app.request.query.get('continent') == continent %}
+                            has-background-light{% endif %}"
+                               href="{{ path('country.index',
+                                   queryParams|merge({continent: continent, page: null })) }}">
+                                {{ continent }}
+                            </a>
+                        </p>
+                    {% endfor %}
+                </div>
+                <div class="field is-narrow has-addons">
+                    <div class="control">
+                        <input class="input" type="text" placeholder="Search by country...">
+                    </div>
+                    <div class="control">
+                        <button type="submit" class="button is-info">
+                            Search
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
         <table class="table is-striped is-hoverable is-fullwidth">
             {% if app.request.query.get('direction') == 'desc' %}
                 {% set nextDirection = 'asc' %}
@@ -59,7 +101,9 @@
                 </tr>
             {% else %}
                 <tr>
-                    <td colspan="7"><div class="text-center text-capitalize">no records found</div></td>
+                    <td colspan="7">
+                        <div class="text-center text-capitalize">no records found</div>
+                    </td>
                 </tr>
             {% endfor %}
             </tbody>
