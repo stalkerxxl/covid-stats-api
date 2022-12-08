@@ -2,10 +2,22 @@
 {% block title %}Country{% endblock %}
 {% block body %}
     <div class="container">
-        <h1 class="title">{{ country.name }}<img class="ms-3" src="{{ asset('flags-malenkie/') }}{{ country.flag }}"
-                                                 alt="flag"/>
-        </h1>
-
+        <nav class="level">
+            <div class="level-left">
+                <div class="level-item">
+                    <h1 class="title">{{ country.name }}</h1>
+                </div>
+                <div class="level-item">
+                    <img class="ms-3" src="{{ asset('flags-malenkie/') }}{{ country.flag }}"
+                         alt="flag"/>
+                </div>
+            </div>
+            <div class="level-right">
+                <div class="level-item">
+                    <p><a href="{{ path('country.index') }}">back to list</a></p>
+                </div>
+            </div>
+        </nav>
         <nav class="level is-mobile">
             <div class="level-item has-text-centered">
                 <div>
@@ -78,10 +90,51 @@
                     {% include('country/single_country_table.html.twig') %}
                 </turbo-frame>
             </div>
-
-
-                <div class="ms-auto me-auto"><p><a href="{{ path('country.index') }}">back to list</a></p></div>
-
         </div>
+
+        <nav class="level is-mobile">
+            <div class="level-item has-text-centered">
+                <div>
+                    <p class="heading">MedianAge</p>
+                    <p class="subtitle">{{ country.medianAge }}</p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered">
+                <div>
+                    <p class="heading">aged65</p>
+                    <p class="subtitle">{{ country.aged65Older }}</p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered">
+                <div>
+                    <p class="heading">aged70</p>
+                    <p class="subtitle">{{ country.aged70Older }}</p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered">
+                <div>
+                    <p class="heading">diabetes</p>
+                    <p class="subtitle">{{ country.diabetesPrevalence }}</p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered">
+                <div>
+                    <p class="heading">handwashing</p>
+                    <p class="subtitle">{{ country.handwashingFacilities }}</p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered">
+                <div>
+                    <p class="heading">hospitalBeds</p>
+                    <p class="subtitle">{{ country.hospitalBedsPerThousand }}</p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered">
+                <div>
+                    <p class="heading">lifeExpectancy</p>
+                    <p class="subtitle">{{ country.lifeExpectancy }}</p>
+                </div>
+            </div>
+        </nav>
     </div>
 {% endblock %}

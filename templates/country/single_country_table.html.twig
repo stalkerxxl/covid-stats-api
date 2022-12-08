@@ -37,7 +37,7 @@
         <tbody>
         {% for stat in pager %}
             <tr>
-                <td>{{ stat.apiTimestamp|date }}</td>
+                <td>{{ stat.apiTimestamp|date('Y-m-d') }}</td>
                 <td>{{ stat.confirmed | default('--') }}</td>
                 <td>{{ stat.deaths | default('--') }}</td>
                 <td>{{ stat.recovered | default('--') }}</td>
@@ -46,5 +46,5 @@
         {% endfor %}
         </tbody>
     </table>
-        {{ pagerfanta(pager, {'omitFirstPage': true }) }}
+        {{ pagerfanta(pager, {'omitFirstPage': true, 'proximity': 1 }) }}
 </turbo-frame>
