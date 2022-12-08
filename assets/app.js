@@ -7,6 +7,8 @@
 
 // any CSS you import will output into a single css file (app.scss in this case)
 import 'bulma/css/bulma.css';
+/*import '@fortawesome/fontawesome-free/css/fontawesome.css';*/
+import '@fortawesome/fontawesome-free/css/all.css';
 import './styles/app.scss';
 
 // start the Stimulus application
