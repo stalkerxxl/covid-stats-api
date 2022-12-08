@@ -5,7 +5,8 @@
 {% block body %}
     <div class="container">
         <h1 class="title">Title</h1>
-        <form class="field is-horizontal" method="get" data-turbo="true">
+        <form method="get" action="{{ path('country.index',
+            queryParams) }}">
             <div class="field-body is-justify-content-space-between">
                 <div class="field is-narrow">
                     <div class="select">
@@ -13,10 +14,12 @@
                             <option value="{{ app.request.query.get('limit')|default(10) }}" selected
                                     hidden>{{ app.request.query.get('limit')|default(10) }}</option>
                             <option value="10">10</option>
-                            <option value="20">20</option>
+                            <option value="25">25</option>
+                            <option value="50">50</option>
                         </select>
                     </div>
                 </div>
+
                 <div class="field is-narrow is-grouped">
                     <p class="control">
                         <a class="button {% if app.request.query.has('continent') == false %}has-background-light{% endif %}"
@@ -29,7 +32,7 @@
                             <a class="button {% if app.request.query.get('continent') == continent %}
                             has-background-light{% endif %}"
                                href="{{ path('country.index',
-                                   queryParams|merge({continent: continent, page: null })) }}">
+                                   queryParams|merge({continent: continent, page: null, limit: app.request.query.get('limit') })) }}">
                                 {{ continent }}
                             </a>
                         </p>
@@ -37,7 +40,7 @@
                 </div>
                 <div class="field is-narrow has-addons">
                     <div class="control">
-                        <input class="input" type="text" placeholder="Search by country...">
+                        <input class="input" name="search" type="search" placeholder="Search by country...">
                     </div>
                     <div class="control">
                         <button type="submit" class="button is-info">
