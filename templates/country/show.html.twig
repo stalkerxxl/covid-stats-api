@@ -69,7 +69,7 @@
             </div>
             <div class="column is-5">
                 <turbo-frame id="single_country_table" data-turbo-action="advance">
-                    {{ include('country/single_country_table.html.twig', with_context = true) }}
+                    {% include('country/single_country_table.html.twig') %}
                 </turbo-frame>
             </div>
 
