@@ -39,40 +39,23 @@
             </div>
             <div class="level-item has-text-centered">
                 <div>
-                    <p class="heading">aged65</p>
-                    <p class="subtitle">{{ country.aged65Older }}</p>
+                    <p class="heading">ConfirmedOnPopulation</p>
+                    <p class="subtitle">{{ country.getConfirmedOnPopulation }}</p>
                 </div>
             </div>
             <div class="level-item has-text-centered">
                 <div>
-                    <p class="heading">aged70</p>
-                    <p class="subtitle">{{ country.aged70Older }}</p>
+                    <p class="heading">DeathsOnPopulation</p>
+                    <p class="subtitle">{{ country.getDeathsOnPopulation }}</p>
                 </div>
             </div>
             <div class="level-item has-text-centered">
                 <div>
-                    <p class="heading">diabetes</p>
-                    <p class="subtitle">{{ country.diabetesPrevalence }}</p>
+                    <p class="heading">DeathsOnConfirmed</p>
+                    <p class="subtitle">{{ country.getDeathsOnConfirmed }}</p>
                 </div>
             </div>
-            <div class="level-item has-text-centered">
-                <div>
-                    <p class="heading">handwashing</p>
-                    <p class="subtitle">{{ country.handwashingFacilities }}</p>
-                </div>
-            </div>
-            <div class="level-item has-text-centered">
-                <div>
-                    <p class="heading">hospitalBeds</p>
-                    <p class="subtitle">{{ country.hospitalBedsPerThousand }}</p>
-                </div>
-            </div>
-            <div class="level-item has-text-centered">
-                <div>
-                    <p class="heading">lifeExpectancy</p>
-                    <p class="subtitle">{{ country.lifeExpectancy }}</p>
-                </div>
-            </div>
+
         </nav>
 
         <div class="columns is-multiline">
@@ -93,12 +76,6 @@
         </div>
 
         <nav class="level is-mobile">
-            <div class="level-item has-text-centered">
-                <div>
-                    <p class="heading">MedianAge</p>
-                    <p class="subtitle">{{ country.medianAge }}</p>
-                </div>
-            </div>
             <div class="level-item has-text-centered">
                 <div>
                     <p class="heading">aged65</p>

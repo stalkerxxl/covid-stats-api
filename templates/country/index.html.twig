@@ -93,7 +93,17 @@
                 </th>
                 <th>
                     <a href="{{ path('country.index',queryParams|merge({sortBy: 'totalDeaths', direction: nextDirection })) }}">
-                        Deaths</a></th>
+                        Deaths</a>
+                </th>
+                <th>
+                    CP%
+                </th>
+                <th>
+                    DP%
+                </th>
+                <th>
+                    DC%
+                </th>
 
                 <th>actions</th>
             </tr>
@@ -115,6 +125,15 @@
                         {% endif %}
                     </td>
                     <td>{{ country.totalDeaths | default('--') }}<small class="text-danger fw-bold ms-1">...+99</small>
+                    </td>
+                    <td>
+                        {{ country.getConfirmedOnPopulation }}
+                    </td>
+                    <td>
+                        {{ country.getDeathsOnPopulation }}
+                    </td>
+                    <td>
+                        {{ country.getDeathsOnConfirmed }}
                     </td>
                     <td>
                         <a href="{{ path('country.show', {'slug': country.slug}) }}">show</a>
