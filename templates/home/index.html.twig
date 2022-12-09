@@ -9,7 +9,7 @@
                 <section class="hero is-primary is-medium">
                     <div class="hero-body">
                         <p class="title">
-                            Wordl Statistic Chart
+                            World Statistic Chart
                         </p>
                         <p class="subtitle">
                             coming soon....
@@ -18,19 +18,27 @@
                 </section>
             </div>
             <div class="column is-4">
-                <h1 class="title">Title</h1>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias amet aut dolorum eligendi et eveniet
-                    ex
-                    fuga
-                    incidunt inventore, laborum odit perspiciatis praesentium, quibusdam reiciendis repellendus sunt
-                    tenetur
-                    unde voluptate! Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias amet aut dolorum eligendi et eveniet
-                    ex
-                    fuga
-                    incidunt inventore, laborum odit perspiciatis praesentium, quibusdam reiciendis repellendus sunt
-                    tenetur
-                    unde voluptate!</p>
-                <a href="{{ path('country.index') }}" class="button">Detail Statistic</a>
+                <div class="box">
+                    <div class="block">
+                        <h1 class="title">Title</h1>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias amet aut dolorum eligendi et
+                            eveniet
+                            ex
+                            fuga
+                            incidunt inventore, laborum odit perspiciatis praesentium, quibusdam reiciendis repellendus sunt
+                            tenetur
+                            unde voluptate! Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias amet aut dolorum
+                            eligendi et eveniet
+                            ex
+                            fuga
+                            </p>
+                    </div>
+
+                    <a href="{{ path('country.index') }}" class="button is-warning is-fullwidth is-focused">Go to
+                        Countries
+                        List<i class="fas fa-project-diagram mx-2"></i></a>
+                </div>
+
             </div>
             <div class="column is-6">
                 <turbo-frame id="new_confirmed_chart" src="{{ path('home_top_by_new_confirmed') }}">

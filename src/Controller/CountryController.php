@@ -30,7 +30,7 @@ class CountryController extends AbstractController
         $continentList = $countryRepository->getAllContinentList();
         $pager = $countryRepository->findAllWithSearchPager($search, $page, $limit, $continent, $sortBy, $direction);
 
-        return $this->render('country/index2.html.twig', [
+        return $this->render('country/index.html.twig', [
             'pager' => $pager,
             'continentList' => $continentList
         ]);

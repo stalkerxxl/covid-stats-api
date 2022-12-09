@@ -1,0 +1,120 @@
+{% extends 'base.html.twig' %}
+{% set queryParams = app.request.query.all %}
+{% block title %}Country index{% endblock %}
+
+{% block body %}
+    <h1>Country index</h1>
+    <div class="row">
+        {# <div class="col">total: {{ pager.count }}</div> #}
+        <div class="col">
+            <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                    {{ queryParams.limit | default(10) }}
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="{{ path('country.index',
+                            queryParams|merge({limit: 10, page: null })) }}">10</a></li>
+                    <li><a class="dropdown-item" href="{{ path('country.index',
+                            queryParams|merge({limit: 20, page: null })) }}">20</a></li>
+                    <li><a class="dropdown-item" href="{{ path('country.index',
+                            queryParams|merge({limit: 50, page: null })) }}">50</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="col">
+            <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                    {{ queryParams.continent | default('All continents') }}
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item"
+                           href="{{ path('country.index', queryParams|merge({continent: null, page: null})) }}">All
+                            continents</a>
+                    </li>
+                    {% for continent in continentList %}
+                        <li><a class="dropdown-item" href="{{ path('country.index',
+                                queryParams|merge({continent: continent, page: null })) }}">{{ continent }}</a></li>
+                    {% endfor %}
+
+                </ul>
+            </div>
+        </div>
+        <div class="col">
+            <form class="d-flex" action="{{ path('country.index') }}">
+                <input type="search" class="form-control me-2" name="search"
+                       value="{{ app.request.query.get('search') }}"
+                       placeholder="search country...">
+                {% if app.request.query.get('search') %}
+                    <a class="btn btn-danger me-2" type="reset"
+                       href="{{ path('country.index') }}">X</a>
+                {% endif %}
+                <button class="btn btn-primary" type="submit">Filter</button>
+            </form>
+        </div>
+    </div>
+    <hr>
+    <table class="table table-hover table-striped">
+        {% if app.request.query.get('direction') == 'desc' %}
+            {% set nextDirection = 'asc' %}
+        {% else %}
+            {% set nextDirection = 'desc' %}
+        {% endif %}
+        <thead>
+        <tr{# {{ stimulus_controller('sort-table', {sortBy: queryParams.sortBy, direction: queryParams.direction}) }} #}>
+            <th>#</th>
+            <th>
+                <a href="{{ path('country.index',queryParams|merge({sortBy: 'continent', direction: nextDirection })) }}">
+                    Continent</a></th>
+            <th>
+                <a href="{{ path('country.index',queryParams|merge({sortBy: 'code', direction: nextDirection })) }}">
+                    Code</a></th>
+            <th>
+                <a href="{{ path('country.index',queryParams|merge({sortBy: 'name', direction: nextDirection })) }}">
+                    Name</a>
+            </th>
+            <th>
+                <a href="{{ path('country.index',queryParams|merge({sortBy: 'totalConfirmed', direction: nextDirection })) }}">
+                    Confirmed</a>
+            </th>
+            <th>
+                <a href="{{ path('country.index',queryParams|merge({sortBy: 'totalDeaths', direction: nextDirection })) }}">
+                    Deaths</a></th>
+
+            <th>actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for country in pager %}
+            <tr>
+                <td>{{ country.id }}</td>
+                <td>{{ country.continent | default('--') }}</td>
+                <td>
+                    <p class="d-inline-flex">
+                        <img src="{{ asset('flags-malenkie/') }}{{ country.flag }}" alt="flag"/>
+                        &nbsp;<strong>{{ country.code }}</strong></p>
+                </td>
+                <td class="align-middle">{{ country.name }}</td>
+                <td>{{ country.totalConfirmed | default('--') }}
+                    {% if country.newConfirmed != 0 %}
+                        <small class="text-success fw-bold">...+{{ country.newConfirmed | default('--') }}</small>
+                    {% endif %}
+                </td>
+                <td>{{ country.totalDeaths | default('--') }}<small class="text-danger fw-bold ms-1">...+99</small>
+                </td>
+                <td>
+                    <a href="{{ path('country.show', {'slug': country.slug}) }}">show</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="7"><div class="text-center text-capitalize">no records found</div></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {# display navigation #}
+    <div class="navigation float-end">
+        {{ pagerfanta(pager, {'omitFirstPage': true }) }}
+    </div>
+{% endblock %}
