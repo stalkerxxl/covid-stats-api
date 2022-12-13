@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Repository\CountryRepository;
+use App\Repository\StatRepository;
 use App\Service\ChartCreator;
 use Doctrine\Common\Collections\ArrayCollection;
 use Psr\Cache\InvalidArgumentException;
@@ -24,8 +25,11 @@ class HomeController extends AbstractController
     }
 
     #[Route('/', name: 'app_home')]
-    public function index(): Response
+    public function index(StatRepository $statRepository): Response
     {
+        //TODO чарт по миру (посчитать из БД)
+        $allStats = $statRepository->getSumDataGroupByMonth();
+        dump($allStats);
         return $this->render('home/index.html.twig');
     }
 
@@ -68,7 +72,7 @@ class HomeController extends AbstractController
 
         $time = $cache->get('last_updated_time', function (ItemInterface $item) {
             $item->expiresAfter(60 * 60 * 24);
-            return new \DateTimeImmutable('- 1 hour');
+            return new \DateTimeImmutable('-1 hour');
         });
 
         return $this->render('home/last-updated-time.html.twig', [
