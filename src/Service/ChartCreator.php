@@ -116,4 +116,39 @@ class ChartCreator
 
         return $chart;
     }
+
+    public function createWorldChart(array $data)
+    {
+        $dates = array_keys($data);
+        $confirmed = array_column($data, 'confirmed');
+        $deaths = array_column($data, 'deaths');
+
+        $chart = (new ChartBuilder())->createChart(Chart::TYPE_LINE);
+
+        $chart->setData([
+            'labels' => $dates,
+            'datasets' => [
+                [
+                    'label' => 'Confirmed',
+                    'backgroundColor' => 'rgb(255, 99, 132)',
+                    'data' => $confirmed,
+                ],
+                [
+                    'label' => 'Deaths',
+                    'backgroundColor' => 'rgb(255, 99, 132)',
+                    'data' => $deaths,
+                ]
+            ],
+        ]);
+
+        $chart->setOptions([
+            'scales' => [
+                'y' => [
+                    'suggestedMin' => 0,
+                ],
+            ],
+        ]);
+
+        return $chart;
+    }
 }

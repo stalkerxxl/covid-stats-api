@@ -37,11 +37,17 @@ class HomeController extends AbstractController
 
         $byMonthData = [];
         foreach ($allStats as $item) {
-            $byMonthData[DateTimeImmutable::createFromInterface($item['apiTimestamp'])->format('Y-m')]['confirmed'] = +$item['confirmed'];
-            $byMonthData[DateTimeImmutable::createFromInterface($item['apiTimestamp'])->format('Y-m')]['deaths'] = +$item['deaths'];
+            $byMonthData[DateTimeImmutable::createFromInterface($item['apiTimestamp'])
+                ->format('Y-m')]['confirmed'] = +$item['confirmed'];
+            $byMonthData[DateTimeImmutable::createFromInterface($item['apiTimestamp'])
+                ->format('Y-m')]['deaths'] = +$item['deaths'];
         }
         dump($byMonthData);
-        return $this->render('home/index.html.twig');
+        $worldChart = $this->chartCreator->createWorldChart($byMonthData);
+
+        return $this->render('home/index.html.twig', [
+            'worldChart' => $worldChart
+        ]);
     }
 
     #[Route('/top-by-new-confirmed', name: 'home_top_by_new_confirmed')]
