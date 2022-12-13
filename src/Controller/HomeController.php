@@ -2,19 +2,15 @@
 
 namespace App\Controller;
 
-use App\Entity\Country;
-use App\Entity\Stat;
 use App\Repository\CountryRepository;
-use App\Repository\StatRepository;
 use App\Service\ChartCreator;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
-use Doctrine\Common\Collections\Criteria;
+use Psr\Cache\InvalidArgumentException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\UX\Chartjs\Builder\ChartBuilderInterface;
-use Symfony\UX\Chartjs\Model\Chart;
+use Symfony\Contracts\Cache\CacheInterface;
+use Symfony\Contracts\Cache\ItemInterface;
 
 class HomeController extends AbstractController
 {
@@ -60,6 +56,23 @@ class HomeController extends AbstractController
 
         return $this->render('home/top-by-new-deaths.html.twig', [
             'topByNewDeathsChart' => $topByNewDeathsChart,
+        ]);
+    }
+
+    /**
+     * @throws InvalidArgumentException
+     */
+    #[Route('/last-updated-time.html.twig', name: 'home_last_updated_time')]
+    public function lastUpdatedTime(CacheInterface $cache): Response
+    {
+
+        $time = $cache->get('last_updated_time', function (ItemInterface $item) {
+            $item->expiresAfter(60 * 60 * 24);
+            return new \DateTimeImmutable('- 1 hour');
+        });
+
+        return $this->render('home/last-updated-time.html.twig', [
+            'time' => $time
         ]);
     }
 }

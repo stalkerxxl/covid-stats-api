@@ -17,7 +17,9 @@
 
             <div class="navbar-end">
                 <div class="navbar-item has-text-danger has-text-weight-bold">
-                    Last update: {{ random(50, 100) }} minutes ago
+                    <turbo-frame id="last-updated-time" src="{{ path('home_last_updated_time') }}">
+                       ---
+                    </turbo-frame>
                 </div>
             </div>
         </div>

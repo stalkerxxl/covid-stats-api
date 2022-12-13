@@ -101,7 +101,6 @@
         "symfony/debug-bundle": "6.2.*",
         "symfony/phpunit-bridge": "^6.2",
         "symfony/stopwatch": "6.2.*",
-        "symfony/web-profiler-bundle": "6.2.*",
-        "symplify/config-transformer": "^11.1"
+        "symfony/web-profiler-bundle": "6.2.*"
     }
 }
