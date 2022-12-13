@@ -5,7 +5,9 @@ namespace App\Controller;
 use App\Repository\CountryRepository;
 use App\Repository\StatRepository;
 use App\Service\ChartCreator;
+use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
+use Exception;
 use Psr\Cache\InvalidArgumentException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -24,12 +26,21 @@ class HomeController extends AbstractController
         $this->chartCreator = $chartCreator;
     }
 
+    /**
+     * @throws Exception
+     */
     #[Route('/', name: 'app_home')]
     public function index(StatRepository $statRepository): Response
     {
         //TODO чарт по миру (посчитать из БД)
         $allStats = $statRepository->getSumDataGroupByMonth();
-        dump($allStats);
+
+        $byMonthData = [];
+        foreach ($allStats as $item) {
+            $byMonthData[DateTimeImmutable::createFromInterface($item['apiTimestamp'])->format('Y-m')]['confirmed'] = +$item['confirmed'];
+            $byMonthData[DateTimeImmutable::createFromInterface($item['apiTimestamp'])->format('Y-m')]['deaths'] = +$item['deaths'];
+        }
+        dump($byMonthData);
         return $this->render('home/index.html.twig');
     }
 

@@ -52,16 +52,17 @@ class StatRepository extends ServiceEntityRepository
     public function getSumDataGroupByMonth()
     {
         $em = $this->getEntityManager();
-       /* $query = $em->createQuery(
-            'SELECT s.apiTimestamp AS date, SUM(s.confirmed) AS confirmed, SUM(s.deaths) AS deaths
-            FROM App\Entity\Stat s
-            GROUP BY date'
-        );*/
+        /* $query = $em->createQuery(
+             'SELECT s.apiTimestamp AS date, SUM(s.confirmed) AS confirmed, SUM(s.deaths) AS deaths
+             FROM App\Entity\Stat s
+             GROUP BY date'
+         );*/
         $query = $this->createQueryBuilder('s')
             ->select('s.apiTimestamp')
             ->addSelect('SUM(s.confirmed) as confirmed')
             ->addSelect('SUM(s.deaths) as deaths')
-            ->groupBy('s.apiTimestamp');
+            ->groupBy('s.apiTimestamp')
+            ->orderBy('s.apiTimestamp', 'ASC');
 
         return $query->getQuery()->getResult();
     }
